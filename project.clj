@@ -11,4 +11,5 @@
                  [korma "0.4.2"]]
   :source-paths ["src/clj"]
   :plugins [[lein-ring "0.9.6"]]
-  :ring {:handler coffee-table.core/app})
+  :ring {:handler coffee-table.core/app}
+  :profiles {:dev {:dependencies [[ring-server "0.4.0"]]}})
