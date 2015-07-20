@@ -1,4 +1,4 @@
-(defproject net.robot-disco/coffee-table "0.0.1-SNAPSHOT"
+,(defproject net.robot-disco/coffee-table "0.0.1-SNAPSHOT"
   :description "A Coffeeshop logger/review webapp"
   :url "http://github.com/RobotDisco/coffee-table"
   :license {:name "MIT License"
@@ -10,6 +10,8 @@
                  [compojure "1.4.0"]
                  [korma "0.4.2"]]
   :source-paths ["src/clj"]
-  :plugins [[lein-ring "0.9.6"]]
+  :plugins [[lein-ring "0.9.6"]
+            [org.clojars.punkisdead/lein-cucumber "1.0.4"]]
   :ring {:handler coffee-table.core/app}
-  :profiles {:dev {:dependencies [[ring-server "0.4.0"]]}})
+  :profiles {:dev {:dependencies [[ring-server "0.4.0"]
+                                  [clj-http "2.0.0"]]}})
