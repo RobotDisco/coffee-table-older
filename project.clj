@@ -1,4 +1,4 @@
-,(defproject net.robot-disco/coffee-table "0.0.1-SNAPSHOT"
+(defproject net.robot-disco/coffee-table "0.0.1-SNAPSHOT"
   :description "A Coffeeshop logger/review webapp"
   :url "http://github.com/RobotDisco/coffee-table"
   :license {:name "MIT License"

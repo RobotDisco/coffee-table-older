@@ -1,0 +1,14 @@
+web:
+  build: .
+  ports:
+  - "3000:3000"
+  command: lein ring server-headless
+  volumes:
+    - .:/app
+  links:
+    - postgres
+
+postgres:
+  image: postgres
+  expose:
+  - "5432"
