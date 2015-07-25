@@ -6,9 +6,9 @@ web:
   volumes:
     - .:/app
   links:
-    - postgres
+    - db
 
-postgres:
+db:
   image: postgres
   expose:
   - "5432"

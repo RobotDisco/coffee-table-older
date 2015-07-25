@@ -8,10 +8,13 @@
   :dependencies [[org.clojure/clojure "1.7.0"]
                  [liberator "0.13"]
                  [compojure "1.4.0"]
-                 [korma "0.4.2"]]
+                 [ragtime "0.5.0"]
+                 [postgresql "9.3-1102.jdbc41"]]
   :source-paths ["src/clj"]
   :plugins [[lein-ring "0.9.6"]
             [org.clojars.punkisdead/lein-cucumber "1.0.4"]]
   :ring {:handler coffee-table.core/app}
   :profiles {:dev {:dependencies [[ring-server "0.4.0"]
-                                  [clj-http "2.0.0"]]}})
+                                  [clj-http "2.0.0"]]}}
+  :aliases {"migrate" ["run" "-m" "coffee-table.db/migrate"]
+            "rollback" ["run" "-m" "coffee-table.db/rollback"]})

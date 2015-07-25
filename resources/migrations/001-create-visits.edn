@@ -1,0 +1,10 @@
+{:up ["CREATE TABLE visits ()n;"
+      "ALTER TABLE visits ADD COLUMN beverage VARCHAR(30) NOT NULL;"
+      "ALTER TABLE visits ADD COLUMN beverage_rating smallint;"
+      "ALTER TABLE visits ADD COLUMN cafe_name VARCHAR(60) NOT NULL;"
+      "ALTER TABLE visits ADD COLUMN date_visited date NOT NULL;"
+      "ALTER TABLE visits ADD CHECK (cafe_name <> '');"
+      "ALTER TABLE visits ADD CHECK (beverage <> '');"
+      "ALTER TABLE visits ADD CHECK (beverage_rating >= 1);"
+      "ALTER TABLE visits ADD CHECK (beverage_rating <= 5);"]
+ :down ["DROP TABLE visits;"]}
