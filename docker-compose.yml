@@ -2,9 +2,10 @@ web:
   build: .
   ports:
   - "3000:3000"
+  - "3666:3666"
   command: lein ring server-headless
   volumes:
-    - .:/app
+    - .:/srv/app
   links:
     - db
 

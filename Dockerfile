@@ -1,9 +1,13 @@
 FROM clojure
 
-RUN mkdir /app
-WORKDIR /app
-ADD project.clj /app/
+ENV APPPATH /srv/app/
+
+RUN mkdir $APPPATH
+WORKDIR $APPPATH
+
+ADD project.clj $APPPATH
 RUN lein deps
 
-ADD . /app/
+ADD . $APPPATH
 
+CMD ["lein", "ring", "server-headless"]
