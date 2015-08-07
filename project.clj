@@ -10,15 +10,11 @@
                  [compojure "1.4.0"]
                  [ragtime "0.5.0"]
                  [yesql "0.5.0-rc3"]
-                 [org.postgresql/postgresql "9.4-1201-jdbc41"]
-                 [ring/ring-json "0.4.0"]]
+                 [org.postgresql/postgresql "9.4-1201-jdbc41"]]
   :source-paths ["src/clj" "src/sql"]
-  :plugins [[lein-ring "0.9.6"]
-            [org.clojars.punkisdead/lein-cucumber "1.0.4"]]
-  :ring {:handler coffee-table.core/app
+  :plugins [[lein-ring "0.9.6"]]
+  :ring {:handler coffee-table.dev/app-debug
          :nrepl {:start? true
                  :port 3666}}
-  :profiles {:dev {:dependencies [[ring-server "0.4.0"]
-                                  [clj-http "2.0.0"]]}}
   :aliases {"migrate" ["run" "-m" "coffee-table.db/migrate"]
             "rollback" ["run" "-m" "coffee-table.db/rollback"]})
