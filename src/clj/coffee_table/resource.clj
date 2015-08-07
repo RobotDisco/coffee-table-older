@@ -1,11 +1,9 @@
 (ns coffee-table.resource
   (:require [liberator.core :refer [defresource]]
             [liberator.representation :refer [ring-response]]
-            [ring.util.response :as r]))
+            [coffee-table.visits :as visits]))
 
-(defresource visit
-  :allowed-methods [:post :get]
+(defresource visit-collection
+  :allowed-methods [:get]
   :available-media-types ["application/json"]
-  :handle-ok (fn [ctx] [])
-  :handle-created (fn [ctx] (ring-response
-                             (r/created "http://localhost/visits/1"))))
+  :handle-ok (fn [ctx] (visits/list-visits)))
