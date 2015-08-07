@@ -1,4 +1,4 @@
-{:up ["CREATE TABLE visits ()n;"
+{:up ["CREATE TABLE visits ();"
       "ALTER TABLE visits ADD COLUMN beverage VARCHAR(30) NOT NULL;"
       "ALTER TABLE visits ADD COLUMN beverage_rating smallint;"
       "ALTER TABLE visits ADD COLUMN cafe_name VARCHAR(60) NOT NULL;"
