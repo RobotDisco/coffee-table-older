@@ -5,6 +5,11 @@
             [clojure.java.io :as io]
             [clojure.data.json :as json]))
 
+(extend-type java.sql.Date
+  json/JSONWriter
+  (-write [date out]
+    (json/-write (str date) out)))
+
 ;; convert the body to a reader. Useful for testing in the repl
 ;; where setting the body to a string is much simpler.
 (defn body-as-string [ctx]
@@ -54,3 +59,12 @@
   :post-redirect? true
   :location #(build-entry-url (get % :request) (get % ::id))
   :handle-ok (fn [ctx] (map #(str (build-entry-url (ctx :request) (:id %))) (visits/list-visits))))
+
+(defresource visit [id]
+  :allowed-methods [:get]
+  :available-media-types ["application/json"]
+  :handle-ok ::entry
+  :exists? (fn [_]
+             (let [e (visits/retrieve-visit {:id id})]
+               (if-not (nil? e)
+                 {::entry e}))))

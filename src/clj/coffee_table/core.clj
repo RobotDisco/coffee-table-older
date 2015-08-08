@@ -7,4 +7,5 @@
 (defroutes app
   (GET "/" [] "<h1>Hello World</h1>")
   (ANY "/visits" [] resource/visit-collection)
+  (ANY "/visits/:id{[0-9]+}" [id] (resource/visit (Integer/parseInt id)))
   (route/not-found "<h1>Page not found</h1>"))

@@ -11,3 +11,5 @@
 (defquery list-visits "visits/list.sql" {:connection db-config})
 
 (defquery create-visit<! "visits/create.sql" {:connection db-config})
+
+(defquery retrieve-visit "visits/retrieve.sql" {:connection db-config})
