@@ -8,6 +8,8 @@ WORKDIR $APPPATH
 ADD project.clj $APPPATH
 RUN lein deps
 
-ADD . $APPPATH
+ADD src $APPPATH
+ADD resources $APPPATH
 
-CMD ["lein", "ring", "server-headless"]
+ENTRYPOINT ["lein"]
+CMD ["ring", "server-headless"]
