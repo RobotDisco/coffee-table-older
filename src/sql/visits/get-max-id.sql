@@ -1,0 +1,1 @@
+SELECT id FROM visits ORDER BY id DESC LIMIT 1

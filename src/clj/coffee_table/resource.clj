@@ -61,10 +61,16 @@
   :handle-ok (fn [ctx] (map #(str (build-entry-url (ctx :request) (:id %))) (visits/list-visits))))
 
 (defresource visit [id]
-  :allowed-methods [:get]
+  :allowed-methods [:get :put]
+  :known-content-type? #(check-content-type % ["application/json"])
   :available-media-types ["application/json"]
-  :handle-ok ::entry
+  :existed? (fn [_] (<= id (visits/get-max-id)))
   :exists? (fn [_]
              (let [e (visits/retrieve-visit {:id id})]
                (if-not (nil? e)
-                 {::entry e}))))
+                 {::entry (first e)})))
+  :handle-ok ::entry
+  :malformed? #(parse-json % ::data visits/json-value-reader)
+  :can-put-to-missing? false
+  :put! #(visits/update-visit! (merge {:id id} (::data %)))
+  :new? (nil? (visits/retrieve-visit {:id id})))
