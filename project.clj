@@ -24,8 +24,10 @@
                         :compiler {:main coffee-table.core
                                    :output-to "resources/public/js/out/app.js"
                                    :output-dir "resources/public/js/out"
+                                   :asset-path "/js/out"
                                    :optimizations :none
                                    :source-map true
+                                   :source-map-path "js/out"
                                    :pretty-print true}}]}
   :aliases {"migrate" ["run" "-m" "coffee-table.db/migrate"]
             "rollback" ["run" "-m" "coffee-table.db/rollback"]})

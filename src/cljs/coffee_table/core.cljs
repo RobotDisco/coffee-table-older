@@ -5,7 +5,7 @@
 (defn widget [data owner]
   (reify
     om/IRender
-    (render [this]
+    (render [_]
       (dom/h1 nil (:text data)))))
 
 (om/root widget {:text "Hello World!"}
