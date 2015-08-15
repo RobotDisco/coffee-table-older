@@ -1,2 +1,2 @@
 -- List all visits
-SELECT id FROM visits;
+SELECT * FROM visits;

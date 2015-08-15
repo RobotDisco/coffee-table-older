@@ -10,6 +10,16 @@
   (-write [date out]
     (json/-write (str date) out)))
 
+(defn wrap-resource-body [request resource-name entry]
+  (let [uri (format "%s://%s:%s/%s/%s"
+                    (name (:scheme request))
+                    (:server-name request)
+                    (:server-port request)
+                    resource-name
+                    (:id entry))]
+    (merge entry
+           {:_links {:self {:href uri}}})))
+
 ;; convert the body to a reader. Useful for testing in the repl
 ;; where setting the body to a string is much simpler.
 (defn body-as-string [ctx]
@@ -32,7 +42,7 @@
         {:message (format "IOException: %s" (.getMessage e))}))))
 
 ;; a helper to create a absolute url for the entry with the given id
-(defn build-entry-url [request id]
+(defn build-entry-url [request resource id]
   (java.net.URL. (format "%s://%s:%s%s/%s"
                 (name (:scheme request))
                 (:server-name request)
@@ -58,7 +68,11 @@
             {::id id})
   :post-redirect? true
   :location #(build-entry-url (get % :request) (get % ::id))
-  :handle-ok (fn [ctx] (map #(str (build-entry-url (ctx :request) (:id %))) (visits/list-visits))))
+  :handle-ok (fn [ctx]
+               (map #(wrap-resource-body (get ctx :request)
+                                         "visits"
+                                         %)
+                    (visits/list-visits))))
 
 (defresource visit [id]
   :allowed-methods [:get :put]
@@ -69,7 +83,9 @@
              (let [e (visits/retrieve-visit {:id id})]
                (if-not (nil? e)
                  {::entry (first e)})))
-  :handle-ok ::entry
+  :handle-ok (fn [ctx] (wrap-resource-body (get ctx :request)
+                                           "visits"
+                                           (get ctx  ::entry)))
   :malformed? #(parse-json % ::data visits/json-value-reader)
   :can-put-to-missing? false
   :put! #(visits/update-visit! (merge {:id id} (::data %)))
