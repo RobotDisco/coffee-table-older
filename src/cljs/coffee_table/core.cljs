@@ -2,11 +2,18 @@
   (:require [om.core :as om]
             [om.dom :as dom]))
 
-(defn widget [data owner]
+(defn widgetitem [app owner]
   (reify
     om/IRender
-    (render [_]
-      (dom/h1 nil (:text data)))))
+    (render [this]
+      (dom/li nil app))))
 
-(om/root widget {:text "Hello World!"}
+(defn widget [app owner]
+  (reify
+    om/IRender
+    (render [this]
+      (dom/ul nil
+              (om/build-all widgetitem app)))))
+
+(om/root widget [1 2 3 4 5 6 7 8 9 10]
          {:target (. js/document (getElementById "app"))})
