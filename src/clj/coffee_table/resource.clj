@@ -42,7 +42,7 @@
         {:message (format "IOException: %s" (.getMessage e))}))))
 
 ;; a helper to create a absolute url for the entry with the given id
-(defn build-entry-url [request resource id]
+(defn build-entry-url [request id]
   (java.net.URL. (format "%s://%s:%s%s/%s"
                 (name (:scheme request))
                 (:server-name request)
