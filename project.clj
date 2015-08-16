@@ -15,12 +15,14 @@
                  [org.omcljs/om "0.9.0"]]
   :source-paths ["src/clj" "src/sql"]
   :plugins [[lein-ring "0.9.6"]
-            [lein-cljsbuild "1.0.6"]]
+            [lein-cljsbuild "1.0.6"]
+            [lein-figwheel "0.3.7"]]
   :ring {:handler coffee-table.dev/app-debug
          :nrepl {:start? true
                  :port 3666}}
   :cljsbuild {:builds [{:id "dev"
                         :source-paths ["src/cljs"]
+                        :figwheel true
                         :compiler {:main coffee-table.core
                                    :output-to "resources/public/js/out/app.js"
                                    :output-dir "resources/public/js/out"
