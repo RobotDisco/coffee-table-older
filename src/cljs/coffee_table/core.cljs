@@ -23,8 +23,7 @@
   (reify
     om/IRender
     (render [this]
-      (dom/table #js {:style #js {:border "1px solid black"
-                                  :borderCollapse "collapse"}}
+      (dom/table #js {:className "ui celled table"}
                  (dom/thead nil
                             (dom/tr nil
                                     (dom/th nil "ID")
