@@ -1,6 +1,7 @@
 (ns coffee-table.core
   (:require [om.core :as om]
             [om.dom :as dom]
+            [om-semantic.rating :as r]
             [ajax.core :refer [GET]]))
 
 (defonce app (atom {:visits []}))
@@ -12,27 +13,23 @@
   (reify
     om/IRender
     (render [this]
-      (dom/tr nil
-              (dom/td nil (:id visit))
-              (dom/td nil (:cafe_name visit))
-              (dom/td nil (:date_visited visit))
-              (dom/td nil (:beverage visit))
-              (dom/td nil (:beverage_rating visit))))))
+      (dom/div #js {:className "item"}
+               (dom/div #js {:className "content"}
+                        (dom/div #js {:className "header"} (:cafe_name visit))
+                        (dom/div #js {:className "meta"}
+                                 (dom/span nil (clojure.string/join
+                                                (list "Visited: "
+                                                      (:date_visited visit)))))
+                        (dom/div #js {:className "description"}
+                                 (dom/span nil "Beverage Rating: ")
+                                 (om/build r/rating {})))))))
 
 (defn coffee-table [app owner]
   (reify
     om/IRender
     (render [this]
-      (dom/table #js {:className "ui celled table"}
-                 (dom/thead nil
-                            (dom/tr nil
-                                    (dom/th nil "ID")
-                                    (dom/th nil "Cafe Name")
-                                    (dom/th nil "Date Visited")
-                                    (dom/th nil "Beverage Ordered")
-                                    (dom/th nil "Beverage Rating")))
-                 (dom/tbody nil
-                             (om/build-all visit-summary (:visits @app)))))))
+      (dom/div #js {:className "ui divided items"}
+                 (om/build-all visit-summary (:visits @app))))))
 
 (GET "http://192.168.99.100:3000/visits" {:handler handler :keywords? true
                                           :response-format :json})
