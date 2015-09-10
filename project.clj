@@ -15,17 +15,15 @@
                  [org.clojure/clojurescript "1.7.48"]
                  [org.omcljs/om "0.9.0"]
                  [cljs-ajax "0.3.14"]
-                 [jayq "2.5.4"]]
+                 [jayq "2.5.4"]
+                 [ring-server "0.4.0"]]
   :source-paths ["src/clj" "src/sql"]
   :plugins [[lein-ring "0.9.6"]
             [lein-cljsbuild "1.0.6"]
             [lein-figwheel "0.3.7"]]
-  :ring {:handler coffee-table.dev/app-debug
-         :nrepl {:start? true
-                 :port 3666}}
   :cljsbuild {:builds [{:id "dev"
                         :source-paths ["src/cljs"]
-                        :figwheel true
+                        :figwheel {:websocket-host "192.168.99.100"}
                         :compiler {:main coffee-table.core
                                    :output-to "resources/public/js/out/app.js"
                                    :output-dir "resources/public/js/out"
@@ -34,5 +32,9 @@
                                    :source-map true
                                    :source-map-path "js/out"
                                    :pretty-print true}}]}
+  :figwheel {:nrepl-host "0.0.0.0"
+             :nrepl-port 7888
+             :repl false
+             :ring-handler coffee-table.dev/app-debug}
   :aliases {"migrate" ["run" "-m" "coffee-table.db/migrate"]
             "rollback" ["run" "-m" "coffee-table.db/rollback"]})

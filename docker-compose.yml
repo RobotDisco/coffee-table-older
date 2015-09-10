@@ -2,7 +2,11 @@ web:
   build: .
   ports:
   - "3000:3000"
+  - "3449:3449"
   - "3666:3666"
+  - "7888:7888"
+  command:
+    figwheel
   volumes:
     - .:/srv/app
   links:

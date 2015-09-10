@@ -31,7 +31,7 @@
       (dom/div #js {:className "ui divided items"}
                  (om/build-all visit-summary (:visits @app))))))
 
-(GET "http://192.168.99.100:3000/visits" {:handler handler :keywords? true
+(GET "http://192.168.99.100:3449/visits" {:handler handler :keywords? true
                                           :response-format :json})
 (om/root coffee-table app
          {:target (. js/document (getElementById "app"))})
