@@ -19,5 +19,5 @@
     om/IRender
     (render [_]
       (dom/div #js {:className "ui rating"
-                    :data-rating 3
+                    :data-rating (:rating data)
                     :data-max-rating 5}))))
