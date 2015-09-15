@@ -4,18 +4,22 @@
             [om-semantic.rating :as r]
             [ajax.core :refer [GET]]))
 
-(defonce app (atom {:visits []}))
+(defonce app (atom {:visits [] :selected nil}))
 
 (defn handler [response]
-  (swap! app assoc :visits response))
+  (swap! app assoc :visits response)
+  (swap! app assoc :selected (:id (first response))))
 
-(defn visit-summary [visit owner]
+(defn visit-summary [visit owner {:keys [selected]}]
   (reify
     om/IRender
     (render [this]
       (dom/div #js {:className "item"}
                (dom/div #js {:className "content"}
-                        (dom/div #js {:className "header"} (:cafe_name visit))
+                        (dom/div #js {:className "header"}
+                                 (if (= selected (:id visit))
+                                   (dom/i #js {:className "pointing right icon"}))
+                                 (:cafe_name visit))
                         (dom/div #js {:className "meta"}
                                  (dom/span nil (clojure.string/join
                                                 (list "Visited: "
@@ -57,7 +61,9 @@
       (dom/div #js {:className "ui grid"}
                (dom/div #js {:className "four wide column"}
                         (apply dom/div #js {:className "ui divided items"}
-                               (om/build-all visit-summary (:visits app))))
+                               (om/build-all visit-summary
+                                             (:visits app)
+                                             {:opts {:selected (:selected app)}})))
                (dom/div #js {:className "twelve wide column"}
                         (dom/div #js {:className "ui basic segment"}
                                  (om/build visit-detail (first (:visits app)))))))))
