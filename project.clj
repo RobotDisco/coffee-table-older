@@ -6,6 +6,7 @@
             :distribution :repo}
   :min-lein-version "2.0.0"
   :dependencies [[org.clojure/clojure "1.7.0"]
+                 [org.clojure/core.async "0.1.346.0-17112a-alpha"]
                  [liberator "0.13"]
                  [compojure "1.4.0"]
                  [ragtime "0.5.0"]
