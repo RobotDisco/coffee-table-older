@@ -1,7 +1,8 @@
 (ns coffee-table.components.app
   (:require [om.core :as om]
             [om.dom :as dom]
-            [om-semantic.rating :as r]))
+            [om-semantic.rating :as r]
+            [cljs.core.async :refer [put!]]))
 
 (defn visit-summary [visit owner opts]
   (reify
@@ -10,8 +11,11 @@
       "VisitSummary")
     om/IRender
     (render [this]
-      (let [selected-visit (:selected-visit opts)]
-        (dom/div #js {:className "item"}
+      (let [channel (get-in opts [:channels :controls])
+            selected-visit (:selected-visit visit)
+            visit-id (:id visit)]
+        (dom/div #js {:className "item"
+                      :onClick #(put! channel [:visit-selected visit-id])}
                  (dom/div #js {:className "content"}
                           (dom/div #js {:className "header"}
                                    (if (= selected-visit (:id visit))
@@ -26,7 +30,7 @@
                                    (om/build r/rating
                                              {:rating (:beverage_rating visit)}))))))))
 
-(defn visit-list [data owner]
+(defn visit-list [data owner opts]
   (reify
     om/IDisplayName
     (display-name [_]
@@ -38,7 +42,8 @@
         (apply dom/div #js {:className "ui divided items"}
                (om/build-all visit-summary
                              visits
-                             {:opts {:selected-visit selected-visit}}))))))
+                             {:opts {:channels (:channels opts)}
+                              :fn #(merge {:selected-visit selected-visit} %)}))))))
 
 (defn visit-detail [data owner]
   (reify
