@@ -2,7 +2,8 @@
   (:require [om.core :as om]
             [om.dom :as dom]
             [om-semantic.rating :as r]
-            [cljs.core.async :refer [put!]]))
+            [cljs.core.async :refer [put!]]
+            [sablono.core :as html :refer-macros [html]]))
 
 (defn visit-summary [visit owner opts]
   (reify
@@ -14,21 +15,20 @@
       (let [channel (get-in opts [:channels :controls])
             selected-visit (:selected-visit visit)
             visit-id (:id visit)]
-        (dom/div #js {:className "item"
-                      :onClick #(put! channel [:visit-selected visit-id])}
-                 (dom/div #js {:className "content"}
-                          (dom/div #js {:className "header"}
-                                   (if (= selected-visit (:id visit))
-                                     (dom/i #js {:className "pointing right icon"}))
-                                   (:cafe_name visit))
-                          (dom/div #js {:className "meta"}
-                                   (dom/span nil (clojure.string/join
-                                                  (list "Visited: "
-                                                        (:date_visited visit)))))
-                          (dom/div #js {:className "description"}
-                                   (dom/span nil "Beverage Rating: ")
-                                   (om/build r/rating
-                                             {:rating (:beverage_rating visit)}))))))))
+        (html [:div.item {:on-click #(put! channel [:visit-selected visit-id])}
+               [:div.content
+                [:div.header
+                 (if (= selected-visit (:id visit))
+                   [:i.pointing.right.icon])
+                 (:cafe_name visit)]
+                [:div.meta
+                 [:span (clojure.string/join
+                         (list "Visited: "
+                               (:date_visited visit)))]]
+                [:div.description
+                 [:span "Beverage Rating: "
+                  (om/build r/rating
+                            {:rating (:beverage_rating visit)})]]]])))))
 
 (defn visit-list [data owner opts]
   (reify
@@ -53,26 +53,26 @@
     om/IRender
     (render [this]
       (let [selected-visit (:selected-visit data)]
-        (dom/form #js {:className "ui form"}
-                  (dom/div #js {:className "field"}
-                           (dom/label nil "Cafe Name")
-                           (dom/input #js {:type "text"
-                                           :name "cafe-name"
-                                           :value (:cafe_name selected-visit)}))
-                  (dom/div #js {:className "field"}
-                           (dom/label nil "Date Visited")
-                           (dom/input #js {:type "date"
-                                           :name "date-visited"
-                                           :value (:date_visited selected-visit)}))
-                  (dom/div #js {:className "field"}
-                           (dom/label nil "Beverage Ordered")
-                           (dom/input #js {:type "text"
-                                           :name "beverage"
-                                           :value (:beverage selected-visit)}))
-                  (dom/div #js {:className "field"}
-                           (dom/label nil "Beverage Rating")
-                           (om/build r/rating
-                                     {:rating (:beverage_rating selected-visit)})))))))
+        (html [:form.ui.form
+                    [:div.field
+                     [:label "Cafe Name"]
+                     [:input.text {:type "text"
+                                   :name "cafe-name"
+                                   :value (:cafe_name selected-visit)}]]
+                    [:div.field
+                     [:label "Date Visited"]
+                     [:input {:type "date"
+                              :name "date-visited"
+                              :value (:date_visited selected-visit)}]]
+                    [:div.field
+                     [:label "Beverage Ordered"]
+                     [:input {:type "text"
+                              :name "beverage"
+                              :value (:beverage selected-visit)}]]
+                    [:div.field
+                     [:label "Beverage Rating"]
+                     (om/build r/rating
+                               {:rating (:beverage_rating selected-visit)})]])))))
 
 (defn app [app owner ops]
   (reify
@@ -84,13 +84,13 @@
       (let [visits (:visits app)
             selected-visit (first (filter #(= (:selected-visit app) (:id %))
                                           visits))]
-        (dom/div #js {:className "ui grid"}
-                 (dom/div #js {:className "four wide column"}
-                          (om/build visit-list
-                                    (select-keys app [:visits :selected-visit])
-                                    {:opts {:channels (:channels app)}}))
-                 (dom/div #js {:className "twelve wide column"}
-                          (dom/div #js {:className "ui basic segment"}
-                                   (om/build visit-detail
-                                             {:selected-visit selected-visit}
-                                             {:opts {:channels (:channels app)}}))))))))
+        (html [:div.ui.grid
+               [:div.four.wide.column
+                (om/build visit-list
+                          (select-keys app [:visits :selected-visit])
+                          {:opts {:channels (:channels app)}})]
+               [:div.twelve.wide.column
+                [:div.ui.basic.segment
+                 (om/build visit-detail
+                           {:selected-visit selected-visit}
+                           {:opts {:channels (:channels app)}})]]])))))
