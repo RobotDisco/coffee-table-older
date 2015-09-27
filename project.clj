@@ -25,7 +25,7 @@
             [lein-figwheel "0.3.7"]]
   :cljsbuild {:builds [{:id "dev"
                         :source-paths ["src/cljs"]
-                        :figwheel {:websocket-host "192.168.99.100"}
+                        :figwheel true
                         :compiler {:main coffee-table.core
                                    :output-to "resources/public/js/out/app.js"
                                    :output-dir "resources/public/js/out"
@@ -34,9 +34,5 @@
                                    :source-map true
                                    :source-map-path "js/out"
                                    :pretty-print true}}]}
-  :figwheel {:nrepl-host "0.0.0.0"
-             :nrepl-port 7888
-             :repl false
-             :ring-handler coffee-table.dev/app-debug}
   :aliases {"migrate" ["run" "-m" "coffee-table.db/migrate"]
             "rollback" ["run" "-m" "coffee-table.db/rollback"]})
