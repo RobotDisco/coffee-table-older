@@ -14,10 +14,19 @@
     om/IDisplayName
     (display-name [_] "Rating")
     om/IDidMount
-    (did-mount [this]
-      (.rating ($ (om/get-node owner))))
+    (did-mount [_]
+      (let [rating (:rating data)
+            max-rating 5]
+        (.rating ($ (om/get-node owner)) #js {"initialRating" rating
+                                              "maxRating" max-rating
+                                              "interactive" false})))
+    om/IDidUpdate
+    (did-update [_ _ _]
+      (let [rating (:rating data)]
+        (-> owner
+            om/get-node
+            $
+            (.rating "set rating", rating))))
     om/IRender
     (render [_]
-      (dom/div #js {:className "ui rating"
-                    :data-rating (:rating data)
-                    :data-max-rating 5}))))
+      (dom/div #js {:className "ui rating"}))))
