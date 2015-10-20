@@ -28,7 +28,9 @@
                 [:div.description
                  [:span "Beverage Rating: "
                   (om/build r/rating
-                            {:rating (:beverage_rating visit)})]]]])))))
+                            {:rating (:beverage_rating visit)
+                             :max-rating 5
+                             :interactive false})]]]])))))
 
 (defn visit-list [data owner opts]
   (reify
@@ -72,7 +74,9 @@
                     [:div.field
                      [:label "Beverage Rating"]
                      (om/build r/rating
-                               {:rating (:beverage_rating selected-visit)})]])))))
+                               {:rating (:beverage_rating selected-visit)
+                                :max-rating 5
+                                :interactive false})]])))))
 
 (defn app [app owner ops]
   (reify
@@ -86,6 +90,9 @@
                                           visits))]
         (html [:div.ui.grid
                [:div.four.wide.column
+                [:button.ui.basic.button
+                 [:i.plus.icon]
+                 "Add Visit"]
                 (om/build visit-list
                           (select-keys app [:visits :selected-visit])
                           {:opts {:channels (:channels app)}})]
