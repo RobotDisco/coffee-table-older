@@ -16,6 +16,6 @@
                  :date_visited "2011-11-05"
                  :beverage "Macchiato"
                  :beverage_rating 2}]]
-        {:selected-visit (first visits)
+        {:current-visit (first visits)
          :visits visits
          :channels channels}))

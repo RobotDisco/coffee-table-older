@@ -18,10 +18,10 @@
       (html [:div.ui.grid
              [:div.four.wide.column
               (om/build visit-list
-                        (select-keys app [:visits :selected-visit])
+                        (select-keys app [:visits :current-visit])
                         {:opts {:channels (:channels app)}})]
              [:div.twelve.wide.column
               [:div.ui.basic.segment
                (om/build visit-detail
-                         (:selected-visit app)
+                         (:current-visit app)
                          {:opts {:channels (:channels app)}})]]]))))

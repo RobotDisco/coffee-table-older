@@ -7,9 +7,9 @@
 (defmethod control-event :visit-selected
   [target message args state]
   (-> state
-      (assoc :selected-visit args)))
+      (assoc :current-visit args)))
 
 (defmethod control-event :add-visit
   [target message args state]
   (let [visit visits/new-visit]
-    (assoc state :selected-visit visit)))
+    (assoc state :current-visit visit)))

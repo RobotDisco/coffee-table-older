@@ -27,11 +27,11 @@
     om/IRender
     (render [this]
       (let [channel (get-in opts [:channels :controls])
-            selected-visit (:selected-visit visit)]
+            current-visit (:current-visit visit)]
         (html [:div.item {:on-click #(put! channel [:visit-selected visit])}
                [:div.content
                 [:div.header
-                 (if (= (:id selected-visit) (:id visit))
+                 (if (= (:id current-visit) (:id visit))
                    [:i.pointing.right.icon])
                  (:cafe_name visit)]
                 [:div.meta
@@ -53,7 +53,7 @@
     om/IRender
     (render [_]
       (let [visits (:visits data)
-            selected-visit (:selected-visit data)]
+            current-visit (:current-visit data)]
         (html [:div
                (om/build add-visit-button {} {:opts opts})
                [:div.ui.divided.items
@@ -61,4 +61,4 @@
                  visit-summary
                  visits
                  {:opts {:channels (:channels opts)}
-                  :fn #(merge {:selected-visit selected-visit} %)})]])))))
+                  :fn #(merge {:current-visit current-visit} %)})]])))))
