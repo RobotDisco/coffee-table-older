@@ -1,6 +1,6 @@
 (ns coffee-table.mock-data)
 
-(defn initial-state [channels]
+(def initial-state
   (let [visits [{:id 1
                  :cafe_name "FKA Twigs Cafe"
                  :date_visited "2015-09-18"
@@ -17,5 +17,4 @@
                  :beverage "Macchiato"
                  :beverage_rating 2}]]
         {:current-visit (first visits)
-         :visits visits
-         :channels channels}))
+         :visits visits}))

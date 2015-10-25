@@ -8,16 +8,17 @@
 
 (enable-console-print!)
 
-(defonce controls-ch
-  (chan))
+(defonce opts
+  {:channels {:controls (chan)}})
 
 (defonce app-state
-  (atom (mock-data/initial-state {:controls controls-ch})))
+  (atom mock-data/initial-state))
 
 (defn main [target state]
-  (let [channels (:channels @state)]
+  (let [channels (:channels opts)]
     (om/root app/app app-state
-             {:target target})
+             {:target target
+              :opts opts})
     (go (while true
           (alt!
             (:controls channels) ([v]

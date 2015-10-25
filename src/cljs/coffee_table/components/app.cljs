@@ -8,7 +8,7 @@
             [coffee-table.components.sidebar :refer [visit-list]]))
 
 
-(defn app [app owner ops]
+(defn app [app owner opts]
   (reify
     om/IDisplayName
     (display-name [_]
@@ -19,9 +19,9 @@
              [:div.four.wide.column
               (om/build visit-list
                         (select-keys app [:visits :current-visit])
-                        {:opts {:channels (:channels app)}})]
+                        {:opts opts})]
              [:div.twelve.wide.column
               [:div.ui.basic.segment
                (om/build visit-detail
                          (:current-visit app)
-                         {:opts {:channels (:channels app)}})]]]))))
+                         {:opts opts})]]]))))

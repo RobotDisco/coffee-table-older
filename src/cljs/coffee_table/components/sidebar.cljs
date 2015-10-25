@@ -60,5 +60,5 @@
                 (om/build-all
                  visit-summary
                  visits
-                 {:opts {:channels (:channels opts)}
+                 {:opts  opts
                   :fn #(merge {:current-visit current-visit} %)})]])))))
