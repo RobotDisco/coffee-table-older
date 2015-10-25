@@ -5,6 +5,20 @@
             [sablono.core :as html :refer-macros [html]]))
 
 
+(defn add-visit-button
+  [data owner opts]
+  (reify
+    om/IDisplayName
+    (display-name [_]
+      "AddVisitButton")
+    om/IRender
+    (render [this]
+      (let [channel (get-in opts [:channels :controls])]
+        (html [:button.ui.basic.button
+               {:on-click #(put! channel [:add-visit])}
+               [:i.plus.icon]
+               "Add Visit"])))))
+
 (defn visit-summary [visit owner opts]
   (reify
     om/IDisplayName
@@ -13,12 +27,11 @@
     om/IRender
     (render [this]
       (let [channel (get-in opts [:channels :controls])
-            selected-visit (:selected-visit visit)
-            visit-id (:id visit)]
-        (html [:div.item {:on-click #(put! channel [:visit-selected visit-id])}
+            selected-visit (:selected-visit visit)]
+        (html [:div.item {:on-click #(put! channel [:visit-selected visit])}
                [:div.content
                 [:div.header
-                 (if (= selected-visit (:id visit))
+                 (if (= (:id selected-visit) (:id visit))
                    [:i.pointing.right.icon])
                  (:cafe_name visit)]
                 [:div.meta
@@ -41,9 +54,11 @@
     (render [_]
       (let [visits (:visits data)
             selected-visit (:selected-visit data)]
-        (html [:div.ui.divided.items
-               (om/build-all
-                visit-summary
-                visits
-                {:opts {:channels (:channels opts)}
-                 :fn #(merge {:selected-visit selected-visit} %)})])))))
+        (html [:div
+               (om/build add-visit-button {} {:opts opts})
+               [:div.ui.divided.items
+                (om/build-all
+                 visit-summary
+                 visits
+                 {:opts {:channels (:channels opts)}
+                  :fn #(merge {:selected-visit selected-visit} %)})]])))))

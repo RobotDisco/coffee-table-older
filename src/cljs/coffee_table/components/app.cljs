@@ -15,19 +15,13 @@
       "CoffeeTable")
     om/IRender
     (render [this]
-      (let [visits (:visits app)
-            selected-visit (first (filter #(= (:selected-visit app) (:id %))
-                                          visits))]
-        (html [:div.ui.grid
-               [:div.four.wide.column
-                [:button.ui.basic.button
-                 [:i.plus.icon]
-                 "Add Visit"]
-                (om/build visit-list
-                          (select-keys app [:visits :selected-visit])
-                          {:opts {:channels (:channels app)}})]
-               [:div.twelve.wide.column
-                [:div.ui.basic.segment
-                 (om/build visit-detail
-                           {:selected-visit selected-visit}
-                           {:opts {:channels (:channels app)}})]]])))))
+      (html [:div.ui.grid
+             [:div.four.wide.column
+              (om/build visit-list
+                        (select-keys app [:visits :selected-visit])
+                        {:opts {:channels (:channels app)}})]
+             [:div.twelve.wide.column
+              [:div.ui.basic.segment
+               (om/build visit-detail
+                         (:selected-visit app)
+                         {:opts {:channels (:channels app)}})]]]))))

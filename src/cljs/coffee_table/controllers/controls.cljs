@@ -1,4 +1,5 @@
-(ns coffee-table.controllers.controls)
+(ns coffee-table.controllers.controls
+  (:require [coffee-table.visits :as visits]))
 
 (defmulti control-event
   (fn [target message args state] message))
@@ -7,3 +8,8 @@
   [target message args state]
   (-> state
       (assoc :selected-visit args)))
+
+(defmethod control-event :add-visit
+  [target message args state]
+  (let [visit visits/new-visit]
+    (assoc state :selected-visit visit)))
