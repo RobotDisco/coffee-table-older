@@ -14,6 +14,9 @@
 (defonce app-state
   (atom mock-data/initial-state))
 
+(defn current-visit []
+  (om/ref-cursor (:current-visit (om/root-cursor app-state))))
+
 (defn main [target state]
   (let [channels (:channels opts)]
     (om/root app/app app-state

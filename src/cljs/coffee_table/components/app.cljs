@@ -18,7 +18,7 @@
       (html [:div.ui.grid
              [:div.four.wide.column
               (om/build visit-list
-                        (select-keys app [:visits :current-visit])
+                        app
                         {:opts opts})]
              [:div.twelve.wide.column
               [:div.ui.basic.segment

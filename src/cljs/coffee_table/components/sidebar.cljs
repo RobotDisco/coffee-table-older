@@ -27,8 +27,8 @@
     om/IRender
     (render [this]
       (let [channel (get-in opts [:channels :controls])
-            current-visit (:current-visit visit)]
-        (html [:div.item {:on-click #(put! channel [:visit-selected visit])}
+            current-visit (om/observe owner (coffee-table.core/current-visit))]
+        (html [:div.item {:on-click #(put! channel [:visit-selected @visit])}
                [:div.content
                 [:div.header
                  (if (= (:id current-visit) (:id visit))
@@ -52,13 +52,12 @@
       "VisitList")
     om/IRender
     (render [_]
-      (let [visits (:visits data)
-            current-visit (:current-visit data)]
+      (let [visits (:visits data)]
         (html [:div
                (om/build add-visit-button {} {:opts opts})
                [:div.ui.divided.items
                 (om/build-all
                  visit-summary
                  visits
-                 {:opts  opts
-                  :fn #(merge {:current-visit current-visit} %)})]])))))
+                 {:opts opts
+                  :key :id})]])))))

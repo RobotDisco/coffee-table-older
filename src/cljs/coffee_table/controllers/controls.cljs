@@ -6,8 +6,7 @@
 
 (defmethod control-event :visit-selected
   [target message args state]
-  (-> state
-      (assoc :current-visit args)))
+  (assoc state :current-visit args))
 
 (defmethod control-event :add-visit
   [target message args state]
