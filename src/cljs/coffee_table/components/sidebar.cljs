@@ -2,7 +2,8 @@
   (:require [om.core :as om]
             [om-semantic.rating :as r]
             [sablono.core :as html :refer-macros [html]]
-            [coffee-table.visits :as visits]))
+            [coffee-table.visits :as visits]
+            [coffee-table.state :as state]))
 
 
 (defn add-visit-button
@@ -14,7 +15,8 @@
     om/IRender
     (render [this]
       (html [:button.ui.basic.button
-             {:on-click #(om/update! (coffee-table.core/current-visit) visits/new-visit)}
+             {:on-click #(om/update! (state/current-visit)
+                                     visits/new-visit)}
              [:i.plus.icon]
              "Add Visit"]))))
 
@@ -25,7 +27,7 @@
       "VisitSummary")
     om/IRender
     (render [this]
-      (let [current-visit (om/observe owner (coffee-table.core/current-visit))]
+      (let [current-visit (om/observe owner (state/current-visit))]
         (html [:div.item {:on-click #(om/update! current-visit @visit)}
                [:div.content
                 [:div.header
