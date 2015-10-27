@@ -1,34 +1,32 @@
 (ns coffee-table.components.sidebar
   (:require [om.core :as om]
             [om-semantic.rating :as r]
-            [cljs.core.async :refer [put!]]
-            [sablono.core :as html :refer-macros [html]]))
+            [sablono.core :as html :refer-macros [html]]
+            [coffee-table.visits :as visits]))
 
 
 (defn add-visit-button
-  [data owner opts]
+  [data owner]
   (reify
     om/IDisplayName
     (display-name [_]
       "AddVisitButton")
     om/IRender
     (render [this]
-      (let [channel (get-in opts [:channels :controls])]
-        (html [:button.ui.basic.button
-               {:on-click #(put! channel [:add-visit])}
-               [:i.plus.icon]
-               "Add Visit"])))))
+      (html [:button.ui.basic.button
+             {:on-click #(om/update! (coffee-table.core/current-visit) visits/new-visit)}
+             [:i.plus.icon]
+             "Add Visit"]))))
 
-(defn visit-summary [visit owner opts]
+(defn visit-summary [visit owner]
   (reify
     om/IDisplayName
     (display-name [_]
       "VisitSummary")
     om/IRender
     (render [this]
-      (let [channel (get-in opts [:channels :controls])
-            current-visit (om/observe owner (coffee-table.core/current-visit))]
-        (html [:div.item {:on-click #(put! channel [:visit-selected @visit])}
+      (let [current-visit (om/observe owner (coffee-table.core/current-visit))]
+        (html [:div.item {:on-click #(om/update! current-visit @visit)}
                [:div.content
                 [:div.header
                  (if (= (:id current-visit) (:id visit))
@@ -45,7 +43,7 @@
                              :max-rating 5
                              :interactive false})]]]])))))
 
-(defn visit-list [data owner opts]
+(defn visit-list [data owner]
   (reify
     om/IDisplayName
     (display-name [_]
@@ -54,10 +52,9 @@
     (render [_]
       (let [visits (:visits data)]
         (html [:div
-               (om/build add-visit-button {} {:opts opts})
+               (om/build add-visit-button {})
                [:div.ui.divided.items
                 (om/build-all
                  visit-summary
                  visits
-                 {:opts opts
-                  :key :id})]])))))
+                 {:key :id})]])))))
