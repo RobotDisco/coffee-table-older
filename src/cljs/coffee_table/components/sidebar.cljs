@@ -14,7 +14,7 @@
       "AddVisitButton")
     om/IRender
     (render [this]
-      (html [:button.ui.basic.button
+      (html [:button.ui.secondary.button
              {:on-click #(om/update! (state/current-visit)
                                      visits/new-visit)}
              [:i.plus.icon]
