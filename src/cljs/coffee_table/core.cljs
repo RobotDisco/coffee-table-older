@@ -1,4 +1,4 @@
-(ns coffee-table.core
+(ns ^:figwheel-always coffee-table.core
   (:require [om.core :as om]
             [coffee-table.state :refer [app-state]]
             [coffee-table.components.app :refer [app]]))
