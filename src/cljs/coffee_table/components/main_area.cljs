@@ -36,56 +36,51 @@
                    :on-click #(put! (:chan opts) :start-editing)}
                   "Edit"])])))))
 
+(defn handle-change [e data edit-key owner]
+  (om/transact! data edit-key (fn [] (.. e -target -value))))
 
 (defn visit-detail [data owner]
   (reify
     om/IDisplayName
     (display-name [_]
       "VisitDetail")
-    om/IWillMount
-    (will-mount [_]
-      (let [edit-chan (om/get-state owner :chan)]
-        (go-loop [] (let [event (<! edit-chan)]
-              (if (= event :start-editing)
-                (om/set-state! owner :editing? true)
-                (om/set-state! owner :editing? false))
-              (recur)))))
     om/IInitState
     (init-state [_]
-      {:chan (chan)
-       :editing? false})
+      {:editing? true})
     om/IRenderState
-    (render-state [_ state]
-      (let [editing? (:editing? state)]
-        (html [:form.ui.form
-               [:div.field
-                [:label "Cafe Name"]
-                (if editing?
-                  [:input.text {:type "text"
-                                :name "cafe-name"
-                                :value (:cafe_name data)}]
-                  [:p (:cafe_name data)])]
-               [:div.field
-                [:label "Date Visited"]
-                (if editing?
-                  [:input {:type "date"
-                           :name "date-visited"
-                           :value (:date_visited data)}]
-                  [:p (:cafe_name data)])]
-               [:div.field
-                [:label "Beverage Ordered"]
-                (if editing?
-                  [:input {:type "text"
-                           :name "beverage"
-                           :value (:beverage data)}]
-                  [:p (:beverage data)])]
-               [:div.field
-                [:label "Beverage Rating"]
-                (om/build r/rating
-                          {:rating (:beverage_rating data)
-                           :max-rating 5
-                           :interactive editing?})]
-               (om/build button-bar
-                         {:id (:id data)
-                          :editing editing?}
-                         {:opts {:chan (:chan state)}})])))))
+    (render-state [_ {:keys [editing?] :as state}]
+      (html [:form.ui.form
+             [:div.field
+              [:label "Cafe Name"]
+              (if editing?
+                [:input.text {:type "text"
+                              :name "cafe-name"
+                              :value (:cafe_name data)
+                              :on-change #(handle-change % data :cafe_name owner)}]
+                [:p (:cafe_name data)])]
+             [:div.field
+              [:label "Date Visited"]
+              (if editing?
+                [:input {:type "date"
+                         :name "date-visited"
+                         :value (:date_visited data)
+                         :on-change #(handle-change % data :date_visited owner)}]
+                [:p (:cafe_name data)])]
+             [:div.field
+              [:label "Beverage Ordered"]
+              (if editing?
+                [:input {:type "text"
+                         :name "beverage"
+                         :value (:beverage data)
+                         :on-change #(handle-change % data :beverage owner)}]
+                [:p (:beverage data)])]
+             [:div.field
+              [:label "Beverage Rating"]
+              (om/build r/rating
+                        {:rating (:beverage_rating data)
+                         :max-rating 5
+                         :interactive editing?})]
+             (om/build button-bar
+                       {:id (:id data)
+                        :editing editing?}
+                       {:opts {:chan (:chan state)}})]))))
