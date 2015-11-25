@@ -7,6 +7,29 @@
             [coffee-table.state :as state])
   (:require-macros [cljs.core.async.macros :refer [go-loop]]))
 
+(defn add-button-handler [visit]
+  (let [app (om/root-cursor state/app-state)
+        visits (:visits @app)
+        id-num (inc (count visits))
+        visit-with-id (assoc visit :id id-num)]
+    (om/transact! app :visits #(conj % visit-with-id))
+    (om/update! app :current-visit visit-with-id)
+    (om/update! app [:main-window :edit?] false)))
+
+(defn save-button-handler [visit]
+  (let [app (om/root-cursor state/app-state)
+        visits (:visits @app)
+        old-visit (some #(if (= (:id %) (:id visit)) %) visits)]
+    (om/transact! app :visits #(replace {old-visit visit} visits))
+    (om/update! app [:main-window :edit?] false)))
+
+(defn cancel-button-handler [id]
+  (let [app state/app-state
+        visits (:visits @app)
+        orig-visit (some #(if (= (:id %) id) %) visits)]
+    (om/update! app :visits :current-visit orig-visit)
+    (om/update! app [:main-window :edit?] false)))
+
 (defn add-buttons [data owner]
   (reify
     om/IDisplayName
@@ -14,10 +37,12 @@
       "AddButtons")
     om/IRender
     (render [_]
-      (html [:div
-             [:button.ui.button.right.floated.primary
-              {:type "button"}
-              "Add"]]))))
+      (let [current-visit (state/current-visit)]
+        (html [:div
+               [:button.ui.button.right.floated.primary
+                {:type "button"
+                 :on-click #(add-button-handler @current-visit)}
+                "Add"]])))))
 
 (defn edit-buttons [{:keys [editing?] :as data} owner]
   (reify
@@ -26,24 +51,26 @@
       "EditButtons")
     om/IRender
     (render [_]
-      (html [:div
-             [:button.ui.button.left.floated.negative
-              {:type "button"}
-              "Delete"]
-             (if editing?
-               [:div.ui.buttons.right.floated
-                [:button.ui.button
-                 {:type "button"
-                  :on-click #(om/update! data :editing? false)}
-                 "Cancel"]
-                [:div.or]
-                [:button.ui.primary.button
-                 {:type "button"}
-                 "Save"]]
-               [:button.ui.button.right.floated
-                {:type "button"
-                 :on-click #(om/update! data :editing? true)}
-                "Edit"])]))))
+      (let [current-visit (state/current-visit)]
+        (html [:div
+               [:button.ui.button.left.floated.negative
+                {:type "button"}
+                "Delete"]
+               (if editing?
+                 [:div.ui.buttons.right.floated
+                  [:button.ui.button
+                   {:type "button"
+                    :on-click #(cancel-button-handler (:id current-visit))}
+                   "Cancel"]
+                  [:div.or]
+                  [:button.ui.primary.button
+                   {:type "button"
+                    :on-click #(save-button-handler @current-visit)}
+                   "Save"]]
+                 [:button.ui.button.right.floated
+                  {:type "button"
+                   :on-click #(om/update! data :editing? true)}
+                  "Edit"])])))))
 
 (defn handle-change [e data edit-key owner f]
   (om/transact! data edit-key (fn [] (f (.. e -target -value)))))
@@ -65,7 +92,7 @@
                                 :name "cafe-name"
                                 :value (:cafe-name data)
                                 :on-change #(handle-change % data :cafe-name owner identity)}]
-                  [:p (:cafe_name data)])]
+                  [:p (:cafe-name data)])]
                [:div.field
                 [:label "Date Visited"]
                 (if editing?
@@ -73,7 +100,7 @@
                            :name "date-visited"
                            :value (tf/unparse (tf/formatters :date) (:date-visited data))
                            :on-change #(handle-change % data :date-visited owner (partial tf/parse (tf/formatters :date)))}]
-                  [:p (:cafe_name data)])]
+                  [:p (tf/unparse (tf/formatters :date) (:date-visited data))])]
                [:div.field
                 [:label "Beverage Ordered"]
                 (if editing?
