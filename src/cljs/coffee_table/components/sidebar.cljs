@@ -6,6 +6,17 @@
             [coffee-table.visits :as visits]
             [coffee-table.state :as state]))
 
+(defn add-visit-handler [_]
+  (let [current-visit (state/current-visit)
+        main-window (state/main-window)]
+    (om/update! current-visit visits/new-visit)
+    (om/update! main-window :editing? true)))
+
+(defn select-visit-handler [visit]
+  (let [current-visit (state/current-visit)
+        main-window (state/main-window)]
+    (om/update! current-visit visit)
+    (om/update! main-window :editing? false)))
 
 (defn add-visit-button
   [data owner]
@@ -16,8 +27,7 @@
     om/IRender
     (render [this]
       (html [:button.ui.secondary.button
-             {:on-click #(om/update! (state/current-visit)
-                                     visits/new-visit)}
+             {:on-click add-visit-handler}
              [:i.plus.icon]
              "Add Visit"]))))
 
@@ -29,7 +39,7 @@
     om/IRender
     (render [this]
       (let [current-visit (om/observe owner (state/current-visit))]
-        (html [:div.item {:on-click #(om/update! current-visit @visit)}
+        (html [:div.item {:on-click #(select-visit-handler @visit)}
                [:div.content
                 [:div.header
                  (if (= (:id current-visit) (:id visit))
