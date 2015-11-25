@@ -1,5 +1,6 @@
 (ns coffee-table.components.main-area
   (:require [cljs.core.async :refer [chan put! <!]]
+            [cljs-time.format :as tf]
             [om.core :as om]
             [om-semantic.rating :as r]
             [sablono.core :as html :refer-macros [html]])
@@ -36,8 +37,8 @@
                    :on-click #(put! (:chan opts) :start-editing)}
                   "Edit"])])))))
 
-(defn handle-change [e data edit-key owner]
-  (om/transact! data edit-key (fn [] (.. e -target -value))))
+(defn handle-change [e data edit-key owner f]
+  (om/transact! data edit-key (fn [] (f (.. e -target -value)))))
 
 (defn visit-detail [data owner]
   (reify
@@ -55,16 +56,16 @@
               (if editing?
                 [:input.text {:type "text"
                               :name "cafe-name"
-                              :value (:cafe_name data)
-                              :on-change #(handle-change % data :cafe_name owner)}]
+                              :value (:cafe-name data)
+                              :on-change #(handle-change % data :cafe-name owner identity)}]
                 [:p (:cafe_name data)])]
              [:div.field
               [:label "Date Visited"]
               (if editing?
                 [:input {:type "date"
                          :name "date-visited"
-                         :value (:date_visited data)
-                         :on-change #(handle-change % data :date_visited owner)}]
+                         :value (tf/unparse (tf/formatters :date) (:date-visited data))
+                         :on-change #(handle-change % data :date-visited owner (partial tf/parse (tf/formatters :date)))}]
                 [:p (:cafe_name data)])]
              [:div.field
               [:label "Beverage Ordered"]
@@ -72,14 +73,11 @@
                 [:input {:type "text"
                          :name "beverage"
                          :value (:beverage data)
-                         :on-change #(handle-change % data :beverage owner)}]
+                         :on-change #(handle-change % data :beverage owner identity)}]
                 [:p (:beverage data)])]
              [:div.field
               [:label "Beverage Rating"]
-              (om/build r/rating
-                        {:rating (:beverage_rating data)
-                         :max-rating 5
-                         :interactive editing?})]
+              (om/build r/rating (:beverage-rating data))]
              (om/build button-bar
                        {:id (:id data)
                         :editing editing?}

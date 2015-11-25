@@ -1,5 +1,6 @@
 (ns coffee-table.components.sidebar
-  (:require [om.core :as om]
+  (:require [cljs-time.format :as tf]
+            [om.core :as om]
             [om-semantic.rating :as r]
             [sablono.core :as html :refer-macros [html]]
             [coffee-table.visits :as visits]
@@ -33,17 +34,14 @@
                 [:div.header
                  (if (= (:id current-visit) (:id visit))
                    [:i.pointing.right.icon])
-                 (:cafe_name visit)]
+                 (:cafe-name visit)]
                 [:div.meta
                  [:span (clojure.string/join
                          (list "Visited: "
-                               (:date_visited visit)))]]
+                               (tf/unparse (tf/formatters :date) (:date-visited visit))))]]
                 [:div.description
                  [:span "Beverage Rating: "
-                  (om/build r/rating
-                            {:rating (:beverage_rating visit)
-                             :max-rating 5
-                             :interactive false})]]]])))))
+                  (om/build r/rating (:beverage-rating visit))]]]])))))
 
 (defn visit-list [data owner]
   (reify
