@@ -24,10 +24,18 @@
     (om/update! app [:main-window :edit?] false)))
 
 (defn cancel-button-handler [id]
-  (let [app state/app-state
+  (let [app (om/root-cursor state/app-state)
         visits (:visits @app)
         orig-visit (some #(if (= (:id %) id) %) visits)]
     (om/update! app :visits :current-visit orig-visit)
+    (om/update! app [:main-window :edit?] false)))
+
+(defn delete-button-handler [id]
+  (let [app (om/root-cursor state/app-state)
+        visits (:visits @app)
+        new-visits (remove #(= (:id %) id) visits)]
+    (om/update! app :visits new-visits)
+    (om/update! app :current-visit (first new-visits))
     (om/update! app [:main-window :edit?] false)))
 
 (defn add-buttons [data owner]
@@ -54,7 +62,8 @@
       (let [current-visit (state/current-visit)]
         (html [:div
                [:button.ui.button.left.floated.negative
-                {:type "button"}
+                {:type "button"
+                 :on-click #(delete-button-handler (:id current-visit))}
                 "Delete"]
                (if editing?
                  [:div.ui.buttons.right.floated
