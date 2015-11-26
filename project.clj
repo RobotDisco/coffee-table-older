@@ -6,22 +6,22 @@
             :distribution :repo}
   :min-lein-version "2.0.0"
   :dependencies [[org.clojure/clojure "1.7.0"]
-                 [org.clojure/core.async "0.2.371"]
+                 [org.clojure/core.async "0.2.374"]
                  [liberator "0.13"]
                  [compojure "1.4.0"]
                  [ragtime "0.5.0"]
                  [yesql "0.5.0-rc3"]
                  [org.postgresql/postgresql "9.4-1201-jdbc41"]
                  [ring-server "0.4.0"]
-                 [org.clojure/clojurescript "1.7.48"]
+                 [org.clojure/clojurescript "1.7.170"]
                  [org.omcljs/om "0.9.0"]
-                 [sablono "0.3.6"]
+                 [sablono "0.4.0"]
                  [om-semantic "0.1.5-SNAPSHOT"]
                  [com.andrewmcveigh/cljs-time "0.3.14"]]
   :source-paths ["src/clj" "src/sql"]
   :plugins [[lein-ring "0.9.6"]
-            [lein-cljsbuild "1.0.6"]
-            [lein-figwheel "0.3.7"]]
+            [lein-cljsbuild "1.1.1"]
+            [lein-figwheel "0.5.0-2"]]
   :cljsbuild {:builds [{:id "dev"
                         :source-paths ["src/cljs"]
                         :figwheel true
