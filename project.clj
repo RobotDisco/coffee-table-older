@@ -9,19 +9,19 @@
                  [org.clojure/core.async "0.2.374"]
                  [liberator "0.13"]
                  [compojure "1.4.0"]
-                 [ragtime "0.5.0"]
-                 [yesql "0.5.0-rc3"]
-                 [org.postgresql/postgresql "9.4-1201-jdbc41"]
-                 [ring-server "0.4.0"]
-                 [org.clojure/clojurescript "1.7.170"]
+                 [com.datomic/datomic-free "0.9.5130" :exclusions [joda-time]]
+                 [org.clojure/clojurescript "1.7.122"]
                  [org.omcljs/om "0.9.0"]
                  [sablono "0.4.0"]
                  [om-semantic "0.1.5-SNAPSHOT"]
-                 [com.andrewmcveigh/cljs-time "0.3.14"]]
-  :source-paths ["src/clj" "src/sql"]
-  :plugins [[lein-ring "0.9.6"]
-            [lein-cljsbuild "1.1.1"]
-            [lein-figwheel "0.5.0-2"]]
+                 [com.andrewmcveigh/cljs-time "0.3.14"]
+                 [javax.servlet/servlet-api "2.5"]]
+  :source-paths ["src/clj"]
+  :plugins [[lein-cljsbuild "1.1.1"]
+            [lein-figwheel "0.4.1"]
+            [lein-ring "0.9.7"]]
+  :ring {:handler coffee-table.core/handler}
+  :figwheel {:ring-handler coffee-table.core/handler}
   :cljsbuild {:builds [{:id "dev"
                         :source-paths ["src/cljs"]
                         :figwheel true
@@ -32,6 +32,4 @@
                                    :optimizations :none
                                    :source-map true
                                    :source-map-path "js/out"
-                                   :pretty-print true}}]}
-  :aliases {"migrate" ["run" "-m" "coffee-table.db/migrate"]
-            "rollback" ["run" "-m" "coffee-table.db/rollback"]})
+                                   :pretty-print true}}]})

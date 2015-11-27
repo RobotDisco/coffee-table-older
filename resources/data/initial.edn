@@ -1,0 +1,16 @@
+[;; classes
+ {:db/id #db/id[:db.part/user]
+  :visit/cafe-name "FKA Twigs Cafe"
+  :visit/date-visited #inst "2015-09-18"
+  :visit/beverage "Cortado"
+  :visit/beverage-rating 3}
+ {:db/id #db/id[:db.part/user]
+  :visit/cafe-name "Maman"
+  :visit/date-visited #inst "2015-09-10"
+  :visit/beverage "Espresso, single shot"
+  :visit/beverage-rating 4}
+ {:db/id #db/id[:db.part/user]
+  :visit/cafe-name "Dark Horse (Queen East)"
+  :visit/date-visited #inst "2011-11-05"
+  :visit/beverage "Macchiato"
+  :visit/beverage-rating 2}]

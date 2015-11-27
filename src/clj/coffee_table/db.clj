@@ -1,20 +1,32 @@
 (ns coffee-table.db
-  (:require [ragtime.jdbc :as jdbc])
-  (:require [ragtime.repl :as repl])
-  (:require [ragtime.strategy :as strategy]))
+  (:require [datomic.api :as d]
+            [clojure.edn :as edn]
+            [clojure.java.io :as io])
+  (:import datomic.Util))
 
-(def db-config {:classname "org.postgresql.Driver"
-                :subprotocol "postgresql"
-                :subname "//db:5432/postgres"
-                :user "postgres"})
+(def uri "datomic:free://localhost:4334/coffee-table")
 
-(def migration-config
-  {:datastore (jdbc/sql-database db-config)
-   :migrations (jdbc/load-resources "migrations")
-   :strategy strategy/rebase})
+(defn read-all [f]
+  (Util/readAll (io/reader f)))
 
-(defn migrate []
-  (repl/migrate migration-config))
+(defn transact-all [conn f]
+  (doseq [txd (read-all f)]
+    (d/transact conn txd))
+  :done)
 
-(defn rollback []
-  (repl/rollback migration-config))
+(defn create-db []
+  (d/create-database uri))
+
+(defn get-conn []
+  (d/connect uri))
+
+(defn load-schema []
+  (transact-all (get-conn) (io/resource "data/schema.edn")))
+
+(defn load-initial-data []
+  (transact-all (get-conn) (io/resource "data/initial.edn")))
+
+(defn init-db []
+  (create-db)
+  (load-schema)
+  (load-initial-data))
