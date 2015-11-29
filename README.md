@@ -13,7 +13,7 @@ Coffee Table is single-page web app that
 I apologize for how bad the code is. I'm learning :D
 
 ### DB
-The backend uses [Datomic][http://datomic.com], a really neat non-SQL fact store that employ the primary designers of Clojure and ClojureScript. I'm using it primarily out of curiosity and because all the tutorials I found for my React framework used it.
+The backend uses [Datomic](http://datomic.com), a really neat non-SQL fact store that employ the primary designers of Clojure and ClojureScript. I'm using it primarily out of curiosity and because all the tutorials I found for my React framework used it.
 
 It's proprietary and not the SQL everyone is used to, but there's a limited free distribution that's good enough for now. Sorry for making you learn something weird. It's really interesting, though, I like the idea and wish there was a good OSS competitor.
 
@@ -38,8 +38,8 @@ Since Clojure(script) is a JVM-based language and I have no idea how to properly
 ## Next steps
 
   * I sort of get Reach's View architecture, but I'm still learning how Reactive apps replace the Controller and Model aspects of MVC
-  * Om seems like a dead end, the author has moved on to Om.Next and there's the competing [Reagent][http://reagent-project.github.io] / [Re-frame][https://github.com/Day8/re-frame] projects which are documented better and surpassed Om in feature sets.
-  * I want to give this entire project a Literate Programming sweep via [Marginalia][https://github.com/gdeer81/marginalia] because I'll be damned if someone has laid out for me a clear map of how a Clojurescript React project should be structured.
+  * Om seems like a dead end, the author has moved on to Om.Next and there's the competing [Reagent](http://reagent-project.github.io) / [Re-frame](https://github.com/Day8/re-frame) projects which are documented better and surpassed Om in feature sets.
+  * I want to give this entire project a Literate Programming sweep via [Marginalia](https://github.com/gdeer81/marginalia) because I'll be damned if someone has laid out for me a clear map of how a Clojurescript React project should be structured.
 
 ## License
 This application isn't good enough to be worth distributing yet and I'm self-conscious, so standard all-rights-reserved. Eventually I'll open it up formally.
