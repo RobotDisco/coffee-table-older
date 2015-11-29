@@ -16,3 +16,10 @@
    :beverage (:visit/beverage edn)
    :beverage-rating {:rating (:visit/beverage-rating edn)
                      :max-rating 5}})
+
+(defn json2edn [edn]
+  {:db/id (:id edn)
+   :visit/cafe-name (:cafe-name edn)
+   :visit/date-visited (tc/to-date (:date-visited edn))
+   :visit/beverage (:beverage edn)
+   :visit/beverage-rating (get-in edn [:beverage-rating :rating])})

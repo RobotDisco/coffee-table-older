@@ -8,34 +8,25 @@
 
 (defn add-button-handler [visit]
   (let [app (om/root-cursor state/app-state)
-        visits (:visits @app)
-        id-num (inc (count visits))
-        visit-with-id (assoc visit :id id-num)]
-    (om/transact! app :visits #(conj % visit-with-id))
-    (om/update! app :current-visit visit-with-id)
-    (om/update! app [:main-window :edit?] false)))
+        visits (:visits @app)]
+    (om/transact! app [] identity [:create visit])))
 
 (defn save-button-handler [visit]
   (let [app (om/root-cursor state/app-state)
         visits (:visits @app)
         old-visit (some #(if (= (:id %) (:id visit)) %) visits)]
-    (om/transact! app :visits #(replace {old-visit visit} visits))
-    (om/update! app [:main-window :edit?] false)))
+    (om/transact! app [] identity [:update visit])))
 
 (defn cancel-button-handler [id]
   (let [app (om/root-cursor state/app-state)
         visits (:visits @app)
         orig-visit (some #(if (= (:id %) id) %) visits)]
-    (om/update! app :visits :current-visit orig-visit)
-    (om/update! app [:main-window :edit?] false)))
+    (om/update! app :current-visit orig-visit)
+    (om/update! app [:main-window :editing?] false)))
 
 (defn delete-button-handler [id]
-  (let [app (om/root-cursor state/app-state)
-        visits (:visits @app)
-        new-visits (remove #(= (:id %) id) visits)]
-    (om/update! app :visits new-visits)
-    (om/update! app :current-visit (first new-visits))
-    (om/update! app [:main-window :edit?] false)))
+  (let [app (om/root-cursor state/app-state)]
+    (om/transact! app [] identity [:delete id])))
 
 (defn add-buttons [data owner]
   (reify
@@ -62,13 +53,13 @@
         (html [:div
                [:button.ui.button.left.floated.negative
                 {:type "button"
-                 :on-click #(delete-button-handler (:id current-visit))}
+                 :on-click #(delete-button-handler (:id @current-visit))}
                 "Delete"]
                (if editing?
                  [:div.ui.buttons.right.floated
                   [:button.ui.button
                    {:type "button"
-                    :on-click #(cancel-button-handler (:id current-visit))}
+                    :on-click #(cancel-button-handler (:id @current-visit))}
                    "Cancel"]
                   [:div.or]
                   [:button.ui.primary.button

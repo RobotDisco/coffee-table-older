@@ -18,18 +18,19 @@
    :body (pr-str data)})
 
 (defn delete-visit [id]
-  (d/transact conn [[:db.fn/retractEntity [:db/id id]]])
+  @(d/transact conn [[:db.fn/retractEntity (Long.xb id)]])
   (generate-response {:status :ok}))
 
 (defn update-visit [id params]
-  (d/transact conn params)
+  @(d/transact conn [params])
   (generate-response {:status :ok}))
 
 (defn add-visit [visit]
   (let [temp-id #db/id[:db.part/user]
-        visit-entity (assoc :db/id temp-id)
-        tx @(d/transact conn visit-entity)
-        [db-after tempids] (val (select-keys tx [:db-after :tempids]))]
+        visit-entity (assoc visit :db/id temp-id)
+        tx @(d/transact conn [visit-entity])
+        db-after (:db-after tx)
+        tempids (:tempids tx)]
     (generate-response {:status :ok :id (d/resolve-tempid db-after tempids temp-id)})))
 
 (defn visits []
