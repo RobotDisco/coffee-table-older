@@ -3,10 +3,9 @@
             [coffee-table.mock-data :as mock]))
 
 (defn initial-state []
-  (let [visits (mock/visit-list)]
-    {:visits visits
-     :current-visit (first visits)
-     :main-window {:editing? false}}))
+  {:visits []
+   :current-visit nil
+   :main-window {:editing? false}})
 
 
 (defonce app-state

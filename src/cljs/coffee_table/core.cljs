@@ -1,26 +1,20 @@
 (ns ^:figwheel-always coffee-table.core
   (:require [om.core :as om]
-            [goog.events :as events]
-            [cljs.reader :as reader]
+            [coffee-table.api :refer [edn-xhr]]
             [coffee-table.state :refer [app-state]]
-            [coffee-table.components.app :refer [app]])
-  #_ (:import [goog.net XhrIo]
-           goog.net.EventType
-           [goog.events EventType]))
+            [coffee-table.visits :refer [edn2json]]
+            [coffee-table.components.app :refer [app]]))
 
 (enable-console-print!)
 
-#_ (defn on-edit [id title]
-  (edn-xhr {:method :put
-            :url (str "visits/" id "/update")
-            :data {}
-            :on-complete (fn [res]
-                           (println "server response:" res))}))
+(defn main! []
+  (edn-xhr
+   {:method :get
+    :url "/visits"
+    :on-complete
+    (fn [res]
+      (swap! app-state assoc :visits (mapv edn2json res))
+      (swap! app-state assoc :current-visit (first (:visits @app-state)))
+      (om/root app app-state {:target (. js/document (getElementById "app"))}))}))
 
-(defn main [target state]
-  (om/root app state {:target target}))
-
-(defn setup! []
-  (main (. js/document (getElementById "app")) app-state))
-
-(set! (.-onload js/window) setup!)
+(set! (.-onload js/window) main!)

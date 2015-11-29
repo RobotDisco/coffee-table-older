@@ -4,8 +4,7 @@
             [om.core :as om]
             [om-semantic.rating :as r]
             [sablono.core :as html :refer-macros [html]]
-            [coffee-table.state :as state])
-  (:require-macros [cljs.core.async.macros :refer [go-loop]]))
+            [coffee-table.state :as state]))
 
 (defn add-button-handler [visit]
   (let [app (om/root-cursor state/app-state)

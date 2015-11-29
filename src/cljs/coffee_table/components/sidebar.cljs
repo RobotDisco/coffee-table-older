@@ -1,30 +1,10 @@
 (ns coffee-table.components.sidebar
-  (:require [cljs.reader :as reader]
-            [cljs-time.format :as tf]
-            [goog.events :as events]
+  (:require [cljs-time.format :as tf]
             [om.core :as om]
             [om-semantic.rating :as r]
             [sablono.core :as html :refer-macros [html]]
             [coffee-table.visits :as visits :refer [edn2json]]
-            [coffee-table.state :as state])
-  (:import [goog.net XhrIo]
-           goog.net.EventType
-           [goog.events EventType]))
-
-(def ^:private meths
-  {:get "GET"
-   :put "PUT"
-   :post "POST"
-   :delete "DELETE"})
-
-(defn edn-xhr [{:keys [method url data on-complete]}]
-  (let [xhr (XhrIo.)]
-    (events/listen xhr goog.net.EventType.COMPLETE
-                   (fn [e]
-                     (on-complete (reader/read-string (.getResponseText xhr)))))
-    (. xhr
-       (send url (meths method) (when data (pr-str data))
-             #js {"Content-Type" "application/edn"}))))
+            [coffee-table.state :as state]))
 
 (defn add-visit-handler [_]
   (let [current-visit (state/current-visit)
@@ -78,12 +58,6 @@
     om/IDisplayName
     (display-name [_]
       "VisitList")
-    om/IWillMount
-    (will-mount [_]
-      (edn-xhr {:method :get
-                :url "/visits"
-                :on-complete #(om/transact! data :visits (fn [_]
-                                                           (mapv edn2json %)))}))
     om/IRender
     (render [_]
       (let [visits (:visits data)]

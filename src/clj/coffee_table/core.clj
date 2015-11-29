@@ -1,6 +1,6 @@
 (ns coffee-table.core
   (:require [clojure.edn :as edn]
-            [compojure.core :refer [defroutes GET PUT]]
+            [compojure.core :refer [defroutes GET PUT DELETE POST]]
             [compojure.route :as route]
             [compojure.handler :as handler]
             [datomic.api :as d]
@@ -17,8 +17,20 @@
    :headers {"Content-Type" "application/edn"}
    :body (pr-str data)})
 
-(defn update-visit [id params]
+(defn delete-visit [id]
+  (d/transact conn [[:db.fn/retractEntity [:db/id id]]])
   (generate-response {:status :ok}))
+
+(defn update-visit [id params]
+  (d/transact conn params)
+  (generate-response {:status :ok}))
+
+(defn add-visit [visit]
+  (let [temp-id #db/id[:db.part/user]
+        visit-entity (assoc :db/id temp-id)
+        tx @(d/transact conn visit-entity)
+        [db-after tempids] (val (select-keys tx [:db-after :tempids]))]
+    (generate-response {:status :ok :id (d/resolve-tempid db-after tempids temp-id)})))
 
 (defn visits []
   (let [db (d/db conn)
@@ -29,9 +41,11 @@
 (defroutes routes
   (GET "/" [] (index))
   (GET "/visits" [] (visits))
+  (POST "/visits" {edn-body :edn-body} (add-visit edn-body))
   (PUT "/visits/:id"
        {params :params edn-body :edn-body}
        (update-visit (:id params) edn-body))
+  (DELETE "/visits/:id" {params :params} (delete-visit (:id params)))
   (route/files "/" {:root "resources/public"}))
 
 (defn read-inputstream-edn [input]
