@@ -2,14 +2,13 @@ FROM clojure
 
 ENV APPPATH /srv/app/
 
-RUN mkdir $APPPATH
+RUN mkdir -p $APPPATH
 WORKDIR $APPPATH
 
-ADD project.clj $APPPATH
+COPY project.clj $APPPATH
 RUN lein deps
+COPY . $APPPATH
 
-ADD src $APPPATH
-ADD resources $APPPATH
+RUN mv "$(lein ring uberjar | sed -n 's/^Created \(.*standalone\.jar\)/\1/p')" app-standalone.jar
 
-ENTRYPOINT ["lein"]
-CMD ["ring", "server-headless"]
+CMD ["java", "-jar", "app-standalone.jar"]
