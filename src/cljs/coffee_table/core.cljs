@@ -1,5 +1,9 @@
-(ns coffee-table.core)
+(ns coffee-table.core
+  (:require [goog.dom :as gdom]
+            [om.next :as om]
+            [coffee-table.component.MobileSummaryItem :refer [MobileSummaryItem]]
+            [cljs-time.core :as time]))
 
-(enable-console-print!)
+(def msi (om/factory MobileSummaryItem))
 
-(println "Hello world!")
+(js/ReactDOM.render (msi) (gdom/getElement "app"))
