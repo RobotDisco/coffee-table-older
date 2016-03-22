@@ -8,15 +8,11 @@
             [cljsjs.react]
             [cljsjs.react.dom]
             [cljs-time.core :refer [now]]
+            [coffee-table.test.utils :as tutils :refer [c]]
             [coffee-table.component.MobileSummaryList :as list]
             [coffee-table.component.MobileSummaryItem :as summary]))
 
-(def ^:dynamic c)
-
-(use-fixtures :each (fn [test-fn]
-                      (binding [c (tu/new-container!)]
-                        (test-fn)
-                        (.unmountComponentAtNode js/ReactDOM c))))
+(use-fixtures :each tutils/test-container)
 
 (deftest MobileSummaryList
   (testing "displays all the provided visits in order"
