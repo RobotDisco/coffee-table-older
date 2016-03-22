@@ -10,5 +10,6 @@ pom.xml.asc
 .lein-plugins/
 .lein-failures
 .nrepl-port
-/resources/public/js/out
+/resources/public/js/out/
+/resources/public/js/out-test/
 /figwheel_server.log

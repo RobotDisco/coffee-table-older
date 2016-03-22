@@ -17,15 +17,15 @@
                         :source-paths ["src/cljs"]
                         :compiler {
                                    :main coffee-table.core
-                                   :asset-path "js"
-                                   :output-to "resources/public/js/main.js"
-                                   :output-dir "resources/public/js"
+                                   :asset-path "js/out"
+                                   :output-to "resources/public/js/out/main.js"
+                                   :output-dir "resources/public/js/out"
                                    :optimizations :none
                                    :pretty-print true}}
                        {:id "test"
                         :source-paths ["src/cljs" "test/cljs"]
-                        :compiler {:output-to "resources/public/js-test/test.js"
-                                   :output-dir "resources/public/js-test"
+                        :compiler {:output-to "resources/public/js/out-test/test.js"
+                                   :output-dir "resources/public/js/out-test"
                                    :main coffee-table.test.runner
                                    :optimizations :none}}]}
   :profiles {:dev {:dependencies [[com.cemerick/piggieback "0.2.1"]
