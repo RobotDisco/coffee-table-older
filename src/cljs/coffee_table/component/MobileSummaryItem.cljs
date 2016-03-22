@@ -3,7 +3,7 @@
             [om.dom :as dom]
             [cljs-time.format :refer [unparse formatters]]))
 
-(defui MobileSummaryItem
+(defui ^:once MobileSummaryItem
   Object
   (render [this]
           (dom/div nil

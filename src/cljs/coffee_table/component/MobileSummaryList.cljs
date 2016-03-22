@@ -3,7 +3,7 @@
             [om.dom :as dom]
             [coffee-table.component.MobileSummaryItem :as summary]))
 
-(defui MobileSummaryList
+(defui ^:once MobileSummaryList
   Object
   (render [this]
           (apply dom/div nil
