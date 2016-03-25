@@ -10,7 +10,8 @@
             [cljs-time.core :refer [now]]
             [cljs-time.format :refer [unparse formatters]]
             [coffee-table.test.utils :as tutils :refer [c]]
-            [coffee-table.component.MobileSummaryItem :as summary]))
+            [coffee-table.component.MobileSummaryItem :as summary]
+            [om-next-semantic.rating :refer [Rating]]))
 
 (use-fixtures :each tutils/test-container)
 
@@ -20,9 +21,10 @@
                  :date (now)
                  :beverage-rating 3}
           summary (om/factory summary/MobileSummaryItem)
-          _ (js/ReactDOM.render (summary props) c)
-          [name-node beverage-node date-node] (sel c [:p])]
+          res (js/ReactDOM.render (summary props) c)
+          [name-node date-node] (sel c [:span])
+          rating (tu/find-one-by-type res Rating)]
       (is (= (props :name) (.-innerHTML name-node)))
-      (is (= (str (props :beverage-rating)) (.-innerHTML beverage-node)))
+      (is (= ((om/props rating) :rating) (props :beverage-rating)))
       (is (= (unparse (formatters :date) (props :date))
              (.-innerHTML date-node))))))
