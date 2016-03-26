@@ -10,6 +10,7 @@
   Object
   (render [this]
           (let [props (om/props this)
+                rating (om/factory Rating)
                 formatter (formatters :date)]
             (html [:div.text.segments
                    [:div (props :name)]
@@ -19,13 +20,17 @@
                    [:div (:grinder props)]
                    [:div (:roast props)]
                    [:div (:beverage-ordered props)]
-                   ((om/factory Rating) {:rating (props :beverage-rating) :max-rating 5})
+                   (rating {:rating (props :beverage-rating) :max-rating 5})
                    [:div (:beverage-notes props)]
-                   ((om/factory Rating) {:rating (props :service-rating) :max-rating 5})
+                   (rating {:rating (props :service-rating) :max-rating 5})
                    [:div (:service-notes props)]
-                   ((om/factory Rating) {:rating (props :ambience-rating) :max-rating 5})
+                   (rating {:rating (props :ambience-rating) :max-rating 5})
                    [:div (:ambience-notes props)]
-                   [:div (:other-notes props)]]))))
+                   [:div (:other-notes props)]
+                   [:button.fluid.ui.button "See Address"]
+                   [:button.fluid.ui.button {:visible false}]
+                   [:button.fluid.ui.button "Edit"]
+                   [:button.fluid.ui.negative.button "Delete"]]))))
 
 
 (defonce visit-data
