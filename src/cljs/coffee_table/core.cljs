@@ -2,6 +2,7 @@
   (:require [goog.dom :as gdom]
             [om.next :as om]
             [coffee-table.component.MobileSummaryList :refer [MobileSummaryList]]
+            [coffee-table.component.MobileVisitView]
             [cljs-time.core :as time]))
 
 (defonce app-state (atom {:visits [{:name "FKA Twigs Cafe"
