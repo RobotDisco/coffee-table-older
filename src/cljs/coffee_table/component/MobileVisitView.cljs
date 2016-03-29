@@ -4,29 +4,59 @@
             [sablono.core :as html :refer-macros [html]]
             [cljs-time.core :as time]
             [cljs-time.format :refer [formatters unparse]]
-            [om-next-semantic.rating :refer [Rating]]))
+            [om-next-semantic.fields :as fields]))
 
 (defui ^:once MobileVisitView
   Object
   (render [this]
           (let [props (om/props this)
-                rating (om/factory Rating)
+                ratingField (om/factory fields/RatingField)
+                textField (om/factory fields/TextField)
+                dateField (om/factory fields/DateField)
+                textArea (om/factory fields/TextArea)
                 formatter (formatters :date)]
-            (html [:div.text.segments
-                   [:div (props :name)]
-                   [:div (unparse formatter (props :date))]
-                   [:div (get-in props [:address :city])]
-                   [:div (:espresso-machine props)]
-                   [:div (:grinder props)]
-                   [:div (:roast props)]
-                   [:div (:beverage-ordered props)]
-                   (rating {:rating (props :beverage-rating) :max-rating 5})
-                   [:div (:beverage-notes props)]
-                   (rating {:rating (props :service-rating) :max-rating 5})
-                   [:div (:service-notes props)]
-                   (rating {:rating (props :ambience-rating) :max-rating 5})
-                   [:div (:ambience-notes props)]
-                   [:div (:other-notes props)]
+            (html [:div.ui.form
+                   (textField {:label "Cafe Name"
+                               :value (:name props)
+                               :readOnly true})
+                   (dateField {:label "Date Visited"
+                               :value (unparse formatter (:date props))
+                               :readOnly true})
+                   (textField {:label "City"
+                               :value (get-in props [:address :city])
+                               :readOnly true})
+                   (textField {:label "Espresso Machine"
+                               :value (:espresso-machine props)
+                               :readOnly true})
+                   (textField {:label "Grinder"
+                               :value (:grinder props)
+                               :readOnly true})
+                   (textField {:label "Roast"
+                               :value (:roast props)
+                               :readOnly true})
+                   (textField {:label "Beverage Ordered"
+                               :value (:beverage-ordered props)})
+                   (ratingField {:label "Drink Rating"
+                                 :rating (props :beverage-rating)
+                                 :max-rating 5})
+                   (textArea {:label "Tasting Notes"
+                              :value (:beverage-notes props)
+                              :readOnly true})
+                   (ratingField {:label "Service Rating"
+                                 :rating (props :service-rating)
+                                 :max-rating 5})
+                   (textArea {:label "Service Notes"
+                              :value (:service-notes props)
+                              :readOnly true})
+                   (ratingField {:label "Ambience Rating"
+                                 :rating (props :ambience-rating)
+                                 :max-rating 5})
+                   (textArea {:label "Ambience Notes"
+                              :value (:ambience-notes props)
+                              :readOnly true})
+                   (textArea {:label "Other Notes"
+                              :value (:other-notes props)
+                              :readOnly true})
                    [:button.fluid.ui.button "See Address"]
                    [:button.fluid.ui.button {:visible false}]
                    [:button.fluid.ui.button "Edit"]
