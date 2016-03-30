@@ -9,7 +9,7 @@
                  [cljs-react-test "0.1.3-SNAPSHOT"]
                  [cljsjs/react-with-addons "0.14.3-0"]
                  [cljsjs/semantic-ui "2.1.8-0"]
-                 [devcards-om-next "0.1.1" :exclusions [cljsjs/react]]]
+                 [devcards "0.2.1-6"]]
   :repl-options {:nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
   :plugins [[lein-cljsbuild "1.1.3"]
             [lein-figwheel "0.5.0-4"]
