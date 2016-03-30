@@ -1,5 +1,5 @@
 (ns coffee-table.component.MobileVisitView
-  (:require-macros [devcards.core :as dc :refer [defcard defcard-om-next]])
+  (:require-macros [devcards.core :as devcards :refer [defcard defcard-om-next]])
   (:require [om.next :as om :refer-macros [defui]]
             [sablono.core :as html :refer-macros [html]]
             [cljs-time.core :as time]
@@ -9,7 +9,7 @@
 (defui ^:once MobileVisitView
   Object
   (render [this]
-          (let [props (om/props this)
+          (let [{:keys [editing buffer] :as props} (om/props this)
                 ratingField (om/factory fields/RatingField)
                 textField (om/factory fields/TextField)
                 dateField (om/factory fields/DateField)
@@ -17,72 +17,77 @@
                 formatter (formatters :date)]
             (html [:div.ui.form
                    (textField {:label "Cafe Name"
-                               :value (:name props)
-                               :readOnly true})
+                               :value (:name buffer)
+                               :readOnly (not editing)})
                    (dateField {:label "Date Visited"
-                               :value (unparse formatter (:date props))
-                               :readOnly true})
+                               :value (unparse formatter (:date buffer))
+                               :readOnly (not editing)})
                    (textField {:label "City"
-                               :value (get-in props [:address :city])
-                               :readOnly true})
+                               :value (get-in buffer [:address :city])
+                               :readOnly (not editing)})
                    (textField {:label "Espresso Machine"
-                               :value (:espresso-machine props)
-                               :readOnly true})
+                               :value (:espresso-machine buffer)
+                               :readOnly (not editing)})
                    (textField {:label "Grinder"
-                               :value (:grinder props)
-                               :readOnly true})
+                               :value (:grinder buffer)
+                               :readOnly (not editing)})
                    (textField {:label "Roast"
-                               :value (:roast props)
-                               :readOnly true})
+                               :value (:roast buffer)
+                               :readOnly (not editing)})
                    (textField {:label "Beverage Ordered"
-                               :value (:beverage-ordered props)})
+                               :value (:beverage-ordered buffer)
+                               :readOnly (not editing)})
                    (ratingField {:label "Drink Rating"
-                                 :rating (props :beverage-rating)
-                                 :max-rating 5})
+                                 :rating (:beverage-rating buffer)
+                                 :max-rating 5
+                                 :interactive editing})
                    (textArea {:label "Tasting Notes"
-                              :value (:beverage-notes props)
-                              :readOnly true})
+                              :value (:beverage-notes buffer)
+                              :readOnly (not editing)})
                    (ratingField {:label "Service Rating"
-                                 :rating (props :service-rating)
-                                 :max-rating 5})
+                                 :rating (:service-rating buffer)
+                                 :max-rating 5
+                                 :interactive editing})
                    (textArea {:label "Service Notes"
-                              :value (:service-notes props)
-                              :readOnly true})
+                              :value (:service-notes buffer)
+                              :readOnly (not editing)})
                    (ratingField {:label "Ambience Rating"
-                                 :rating (props :ambience-rating)
-                                 :max-rating 5})
+                                 :rating (:ambience-rating buffer)
+                                 :max-rating 5
+                                 :interactive editing})
                    (textArea {:label "Ambience Notes"
-                              :value (:ambience-notes props)
-                              :readOnly true})
+                              :value (:ambience-notes buffer)
+                              :readOnly (not editing)})
                    (textArea {:label "Other Notes"
-                              :value (:other-notes props)
-                              :readOnly true})
+                              :value (:other-notes buffer)
+                              :readOnly (not editing)})
                    [:button.fluid.ui.button "See Address"]
                    [:button.fluid.ui.button {:visible false}]
                    [:button.fluid.ui.button "Edit"]
                    [:button.fluid.ui.negative.button "Delete"]]))))
 
 
-(defonce visit-data
-  {:name "FKA Twigs Cafe"
-   :date (time/now)
-   :address {:address1 "117 Grimes Boulevard"
-             :address2 "CPL 593H Suite"
-             :city "Toronto"
-             :region "Ontario"
-             :country "Canada"}
-   :espresso-machine "Elektra Micro Casa a Leva"
-   :grinder "Mazzer Stepless Doserless"
-   :roast "Intelligentsia Diablo"
-   :beverage-ordered "Single shot espresso"
-   :beverage-rating 4
-   :beverage-notes "Something something something"
-   :service-rating 3
-   :service-notes "Something something something"
-   :ambience-rating 5
-   :ambience-notes "Something something something"
-   :other-notes "Something something something"
-   })
+(def visit-data
+  {:editing false
+   :buffer {:name "FKA Twigs Cafe"
+            :date (time/now)
+            :address {:address1 "117 Grimes Boulevard"
+                      :address2 "CPL 593H Suite"
+                      :city "Toronto"
+                      :region "Ontario"
+                      :country "Canada"}
+            :espresso-machine "Elektra Micro Casa a Leva"
+            :grinder "Mazzer Stepless Doserless"
+            :roast "Intelligentsia Diablo"
+            :beverage-ordered "Single shot espresso"
+            :beverage-rating 4
+            :beverage-notes "Something something something"
+            :service-rating 3
+            :service-notes "Something something something"
+            :ambience-rating 5
+            :ambience-notes "Something something something"
+            :other-notes "Something something something"
+            }})
 
 (defcard mobile-visit-data
   visit-data)

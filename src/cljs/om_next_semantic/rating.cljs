@@ -7,22 +7,19 @@
 (defui ^:once Rating
   Object
   (componentDidMount [this]
-                     (.rating (js/$ (dom/node this)) #js {:interactive false}))
+                     (let [{:keys [rating max-rating interactive]} (om/props this)]
+                       (.rating (-> this dom/node js/$) #js {:interactive interactive
+                                                             :initialRating rating
+                                                             :maxRating max-rating})))
   (componentDidUpdate [this _ _]
-                      (let [props (om/props this)
-                            rating (props :rating)
-                            node (-> this
-                                     dom/node
-                                     js/$)]
-                        (.rating node "set rating" rating)))
+                      (let [{:keys [interactive rating] :as props} (om/props this)
+                            node (-> this dom/node js/$)]
+                        (.rating node "set rating" rating)
+                        (if interactive
+                          (.rating node "enable")
+                          (.rating node "disable"))))
   (render [this]
-          (let [props (om/props this)
-                rating (props :rating)
-                max-rating (props :max-rating)]
-            (dom/div #js {:className "ui rating"
-                          :data-rating rating
-                          :data-max-rating max-rating
-                          :interactive false}))))
+          (dom/div #js {:className "ui rating"})))
 
 (defcard rating
   ((om/factory Rating) {:rating 4 :max-rating 5}))

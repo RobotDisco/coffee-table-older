@@ -6,8 +6,7 @@
             [om.dom :as dom]
             [sablono.core :as html :refer-macros [html]]
             [om-next-semantic.rating :refer [Rating]]
-            [cljs-time.format :refer [unparse formatters]]
-            [devcards-om-next.core :as don :refer-macros [om-next-root defcard-om-next]]))
+            [cljs-time.format :refer [unparse formatters]]))
 
 (defui ^:once MobileSummaryItem
   Object

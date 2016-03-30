@@ -32,10 +32,10 @@
 (defui ^:once RatingField
   Object
   (render [this]
-          (let [{:keys [label rating max-rating] :as props} (om/props this)
+          (let [{:keys [label rating max-rating interactive] :as props} (om/props this)
                 widget (om/factory Rating)]
             (dom/div #js {:className "field"}
                      (dom/label nil label)
                      (widget {:rating rating
                               :max-rating max-rating
-                              :interactive false})))))
+                              :interactive interactive})))))
