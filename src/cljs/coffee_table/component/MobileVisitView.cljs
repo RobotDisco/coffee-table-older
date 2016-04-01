@@ -6,10 +6,53 @@
             [cljs-time.format :refer [formatters unparse]]
             [om-next-semantic.fields :as fields]))
 
+(defn mutate [{:keys [state] :as env} key params]
+  (case key
+    'toggle-edit {:keys [:editing]
+                  :action (let [newval (:value params)]
+                            (swap! state assoc :editing newval))}))
+
+(defn read [{:keys [state] :as env} key params]
+  (let [st @state]
+    (if-let [[_ value] (find st key)]
+      {:value value}
+      {:value :not-find})))
+
+(def parser (om/parser {:read read :mutate mutate}))
+
+(defonce app-state
+  (atom {:editing false
+         :buffer {:name "FKA Twigs Cafe"
+                  :date (time/now)
+                  :address {:address1 "117 Grimes Boulevard"
+                            :address2 "CPL 593H Suite"
+                            :city "Toronto"
+                            :region "Ontario"
+                            :country "Canada"}
+                  :espresso-machine "Elektra Micro Casa a Leva"
+                  :grinder "Mazzer Stepless Doserless"
+                  :roast "Intelligentsia Diablo"
+                  :beverage-ordered "Single shot espresso"
+                  :beverage-rating 4
+                  :beverage-notes "Something something something"
+                  :service-rating 3
+                  :service-notes "Something something something"
+                  :ambience-rating 5
+                  :ambience-notes "Something something something"
+                  :other-notes "Something something something"
+                  }}))
+
+(defonce reconciler
+  (om/reconciler {:state app-state
+                  :parser parser}))
+
+
 (defui ^:once MobileVisitView
+  static om/IQuery
+  (query [this] [:editing :buffer])
   Object
   (render [this]
-          (let [{:keys [editing buffer] :as props} (om/props this)
+          (let [{:keys [buffer editing] :as props} (om/props this)
                 ratingField (om/factory fields/RatingField)
                 textField (om/factory fields/TextField)
                 dateField (om/factory fields/DateField)
@@ -63,35 +106,15 @@
                               :readOnly (not editing)})
                    [:button.fluid.ui.button "See Address"]
                    [:button.fluid.ui.button {:visible false}]
-                   [:button.fluid.ui.button "Edit"]
+                   [:button.fluid.ui.button
+                    {:onClick #(om/transact! this `[(~'toggle-edit {:value ~(not editing)})])}
+                    (if editing "Edit Y" "Edit N")]
                    [:button.fluid.ui.negative.button "Delete"]]))))
 
 
-(def visit-data
-  {:editing false
-   :buffer {:name "FKA Twigs Cafe"
-            :date (time/now)
-            :address {:address1 "117 Grimes Boulevard"
-                      :address2 "CPL 593H Suite"
-                      :city "Toronto"
-                      :region "Ontario"
-                      :country "Canada"}
-            :espresso-machine "Elektra Micro Casa a Leva"
-            :grinder "Mazzer Stepless Doserless"
-            :roast "Intelligentsia Diablo"
-            :beverage-ordered "Single shot espresso"
-            :beverage-rating 4
-            :beverage-notes "Something something something"
-            :service-rating 3
-            :service-notes "Something something something"
-            :ambience-rating 5
-            :ambience-notes "Something something something"
-            :other-notes "Something something something"
-            }})
-
 (defcard mobile-visit-data
-  visit-data)
+  app-state)
 
 (defcard-om-next mobile-visit
   MobileVisitView
-  visit-data)
+  reconciler)
