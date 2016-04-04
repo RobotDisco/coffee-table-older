@@ -10,7 +10,7 @@
             (dom/div #js {:className "field"}
                      (dom/label nil label)
                      (dom/input (clj->js (merge props
-                                                {:input "text"})))))))
+                                                {:type "text"})))))))
 
 (defui ^:once DateField
   Object
@@ -19,7 +19,7 @@
             (dom/div #js {:className "field"}
                      (dom/label nil label)
                      (dom/input (clj->js (merge props
-                                                {:input "date"})))))))
+                                                {:type "date"})))))))
 
 (defui ^:once TextArea
   Object
