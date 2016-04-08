@@ -3,7 +3,7 @@
   :url "http://github.com/RobotDisco/coffee-table"
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [org.clojure/clojurescript "1.7.228"]
-                 [org.omcljs/om "1.0.0-alpha31" :exclusions [cljsjs/react]]
+                 [org.omcljs/om "1.0.0-alpha32" :exclusions [cljsjs/react]]
                  [sablono "0.6.3"]
                  [com.andrewmcveigh/cljs-time "0.4.0"]
                  [cljs-react-test "0.1.3-SNAPSHOT"]
