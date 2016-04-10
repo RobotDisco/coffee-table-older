@@ -6,24 +6,82 @@
 
 (defmethod mutate 'visit/display
   [{:keys [state]} _ {:keys [id]}]
-  {:action
+  {:value {:keys [:app/buffer :app/mode]}
+   :action
    (fn []
-     (let [{:keys [visits/list] :as st} @state
-           visit (some #(when (= id (:id %)) %) list)]
-       (swap! state assoc :buffer visit)))})
+     (let [{:keys [app/visits] :as st} @state
+           new-buffer (into {} (get-in st [:visits/by-id id]))]
+       (swap! state assoc :app/buffer new-buffer)
+       (swap! state assoc :app/mode :visit)))})
 
-(defn get-visits [state]
-  (into [] (get state :visits/list)))
+(defmethod mutate 'buffer/save
+  [{:keys [state]} _ _]
+  (let [st @state
+        {:keys [app/buffer app/editing visits/by-id]} st
+        {:keys [db/id]} buffer]
+    {:value {:keys [:app/editing :visits/by-id]}
+     :action (fn []
+               (swap! state assoc-in [:visits/by-id id] buffer)
+               (swap! state assoc [:app/editing false])
+               (swap! state assoc :app/mode :list))}))
+
+(defmethod mutate 'buffer/revert
+  [{:keys [state]} _ _]
+  (let [st @state
+        {:keys [:app/buffer :app/editing :visits/by-id]} st
+        {:keys [db/id]} buffer]
+    {:value {:keys [:app/editing :app/buffer]}
+     :action (fn []
+               (swap! state assoc :app/buffer (by-id 1))
+               (swap! state assoc :app/editing false))}))
+
+(defmethod mutate 'buffer/edit
+  [{:keys [state]} _ _]
+  {:value {:keys [:app/editing]}
+   :action #(swap! state assoc :app/editing true)})
+
+(defmethod mutate 'visit/delete
+  [{:keys [state]} _ _]
+  (let [st @state
+        {:keys [:app/buffer]} st
+        {:keys [db/id]} buffer
+        remove-fn #(= [:visits/by-id id] %)]
+    {:value {:keys [:app/visits :app/by-id :app/editing :app/mode]}
+     :action (fn []
+               (swap! state update :app/visits (fn [x] (into [] (remove remove-fn x))))
+               (swap! state assoc :app/editing false)
+               (swap! state assoc :app/mode :list))}))
+
+(defmethod mutate 'edit-field
+  [{:keys [state]} _ {:keys [key value]}]
+  {:value {:keys [:app/buffer]}
+   :action #(swap! state assoc-in [:app/buffer key] value)})
+
+(defmethod mutate 'edit-date-field
+  [{:keys [state]} _ {:keys [key value]}]
+  {:value {:keys [:app/buffer]}
+   :action #(swap! state assoc-in [:app/buffer key] (parse (formatters :date) value))})
 
 (defmulti read om/dispatch)
 
-(defmethod read :visits/list
-  [{:keys [state]} _ _]
+(defmethod read :app/mode
+  [{:keys [state]} key _]
   (let [st @state]
-    {:value (get-visits st)}))
+    {:value (get st key)}))
+
+(defmethod read :app/editing
+  [{:keys [state]} key _]
+  (let [st @state]
+    {:value (get st key)}))
+
+(defmethod read :app/buffer
+  [{:keys [query state]} key _]
+  (let [st @state]
+    {:value (get st key)}))
 
 (defmethod read :default
-  [{:keys [state]} _ _]
-  {:value "butt"})
+  [{:keys [query state]} key _]
+  (let [st @state]
+    {:value (om/db->tree query (get st key) st)}))
 
 (def parser (om/parser {:read read :mutate mutate}))

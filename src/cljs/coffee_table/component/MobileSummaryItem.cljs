@@ -1,26 +1,23 @@
 (ns coffee-table.component.MobileSummaryItem
   (:require-macros [devcards.core :as devcards :refer [defcard]])
-  (:require [goog.dom :as gdom]
-            [cljsjs.semantic-ui]
+  (:require [cljsjs.semantic-ui]
             [om.next :as om :refer-macros [defui]]
-            [om.dom :as dom]
             [sablono.core :as html :refer-macros [html]]
             [om-next-semantic.rating :refer [Rating]]
             [cljs-time.format :refer [unparse formatters]]))
 
 (defn handle-select [this id]
-  (om/transact! this `[(visit/display {:id ~id})]))
+  (om/transact! this `[(visit/display {:id ~id}) :app/mode :app/buffer]))
 
 (defui ^:once MobileSummaryItem
   static om/Ident
-  (ident [this {:keys [id]}]
-         [:visit/list id])
+  (ident [this {:keys [db/id]}] [:visits/by-id id])
   static om/IQuery
-  (query [this] [:id :name :date :beverage-rating])
+  (query [this] '[:db/id :visit/name :visit/date :visit/beverage-rating])
   Object
   (render [this]
           (let [props (om/props this)
-                {:keys [id name beverage-rating date]} props]
+                {:keys [db/id visit/name visit/beverage-rating visit/date]} props]
             (html
              [:div.ui.segment {:onClick #(handle-select this id)}
               [:div
@@ -33,7 +30,7 @@
                [:span (unparse (formatters :date)
                                date)]]]))))
 
-(def mobile-summary-item (om/factory MobileSummaryItem {:keyfn :id}))
+(def mobile-summary-item (om/factory MobileSummaryItem {:keyfn :db/id}))
 
 
 (defcard mobile-item

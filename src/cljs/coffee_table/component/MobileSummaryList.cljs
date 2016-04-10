@@ -4,12 +4,12 @@
             [coffee-table.component.MobileSummaryItem :as summary]))
 
 (defui ^:once MobileSummaryList
-  static om/IQuery
-  (query [this] [{:visits/list (om/get-query summary/MobileSummaryItem)}])
   Object
   (render [this]
           (let [widget summary/mobile-summary-item
-                props (om/props this)
-                {:keys [visits/list]} props]
+                visits (om/props this)]
             (apply dom/div nil
-                   (map widget list)))))
+                   (map widget visits)))))
+
+(def summary-list
+  (om/factory MobileSummaryList))
