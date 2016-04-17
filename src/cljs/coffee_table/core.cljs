@@ -6,6 +6,8 @@
             [coffee-table.component.App :refer [App]]
             [cljs-time.core :as time]))
 
+(enable-console-print!)
+
 (defonce reconciler (om/reconciler {:state state/app-state
                                     :parser parser/parser}))
 

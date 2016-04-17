@@ -9,7 +9,7 @@
                  [cljs-react-test "0.1.3-SNAPSHOT"]
                  [cljsjs/react-with-addons "0.14.3-0"]
                  [cljsjs/semantic-ui "2.1.8-0"]
-                 [devcards "0.2.1-6"]]
+                 [devcards "0.2.1-6" :exclusions [cljsjs/react]]]
   :repl-options {:nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
   :plugins [[lein-cljsbuild "1.1.3"]
             [lein-figwheel "0.5.0-4"]
@@ -37,7 +37,13 @@
                                    :asset-path "js/compiled/cards_out"
                                    :output-to "resources/public/js/compiled/cards.js"
                                    :output-dir "resources/public/js/compiled/cards_out"
-                                   :source-map-timestamp true}}]}
+                                   :source-map-timestamp true}}
+                       {:id "prod"
+                        :source-paths ["src/cljs"]
+                        :compiler {:output-to "resources/public/js/compiled/coffee_table.js"
+                                   :main coffee-table.core
+                                   :optimizations :advanced
+                                   :pretty-print false}}]}
   :profiles {:dev {:dependencies [[com.cemerick/piggieback "0.2.1"]
                                   [figwheel-sidecar "0.5.0-4"]]
                    :source-paths ["src/cljs"]}})
