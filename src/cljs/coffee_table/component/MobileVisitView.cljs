@@ -4,7 +4,8 @@
             [sablono.core :as html :refer-macros [html]]
             [cljs-time.core :as time]
             [cljs-time.format :refer [formatters unparse parse]]
-            [om-next-semantic.fields :as fields]))
+            [om-next-semantic.fields :as fields]
+            [coffee-table.visit :as visit]))
 
 (defn changeFieldHandler [this key]
   (fn [e]
@@ -18,20 +19,23 @@
   (fn [value]
     (om/transact! this `[(~'edit-field {:key ~key :value ~value})])))
 
-(defn buttons [this buttons editing]
-  (let [{:keys [:db/id]} buffer]
+(defn buttons [this buffer editing]
+  (let [{:keys [:db/id]} buffer
+        save-action (if (visit/pending? buffer) 'visit/add 'buffer/save)
+        cancel-action (if (visit/pending? buffer) 'app/list-mode 'buffer/revert)]
     (html (if editing
             [:div
              [:button.fluid.ui.button.positive
-              {:onClick #(om/transact! this `[(~'buffer/save) :app/visits :app/editing :app/mode])}
+              {:onClick #(om/transact! this `[(~save-action) :app/visits :app/editing :app/mode])}
               "Save"]
              [:button.fluid.ui.button
-              {:onClick #(om/transact! this `[(~'buffer/revert) :app/buffer :app/editing])}
+              {:onClick #(om/transact! this `[(~cancel-action) :app/buffer :app/editing])}
               "Cancel"]
-             [:button.fluid.ui.button {:visible false :disabled true}]
-             [:button.fluid.ui.negative.button
-              {:onClick #(om/transact! this `[(~'visit/delete) :app/visits :app/mode])}
-              "Delete"]]
+             (when-not (visit/pending? buffer)
+               [:button.fluid.ui.button {:visible false :disabled true}]
+               [:button.fluid.ui.negative.button
+                {:onClick #(om/transact! this `[(~'visit/delete) :app/visits :app/mode])}
+                "Delete"])]
             [:div [:button.fluid.ui.button "See Address"]
              [:button.fluid.ui.button {:visible false :disabled true}]
              [:button.fluid.ui.button

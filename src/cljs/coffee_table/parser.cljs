@@ -1,8 +1,40 @@
 (ns coffee-table.parser
   (:require [om.next :as om]
-            [cljs-time.format :refer [parse formatters]]))
+            [cljs-time.format :refer [parse formatters]]
+            [coffee-table.visit :as visit]))
 
 (defmulti mutate om/dispatch)
+
+(defmethod mutate 'visit/new
+  [{:keys [state]} _ _]
+  {:value {:keys [:app/buffer]}
+   :action (fn []
+             (swap! state assoc :app/buffer (visit/new-visit))
+             (swap! state assoc :app/mode :visit)
+             (swap! state assoc :app/editing true))})
+
+(defmethod mutate 'visit/add
+  [{:keys [state]} _ _]
+  {:value {:keys [:app/visits :app/mode :app/editing]}
+   :action (fn []
+             (let [st @state
+                   {:keys [visits/by-id app/visits app/buffer]} @state
+                   new-id (inc (count (keys by-id)))
+                   buffer-with-id (assoc buffer :db/id new-id)
+                   new-by-id (assoc by-id (:db/id buffer-with-id) buffer-with-id)
+                   new-visits (conj visits [:visits/by-id new-id])]
+               (swap! state assoc :visits/by-id new-by-id)
+               (swap! state assoc :app/visits new-visits)
+               (swap! state assoc :app/editing false)
+               (swap! state assoc :app/mode :list)))})
+
+(defmethod mutate 'app/list-mode
+  [{:keys [state]} _ _]
+  {:value {:keys [:app/editing :app/mode]}
+   :action (fn []
+             (let [st @state]
+               (swap! state assoc :app/editing false)
+               (swap! state assoc :app/mode :list)))})
 
 (defmethod mutate 'visit/display
   [{:keys [state]} _ {:keys [id]}]

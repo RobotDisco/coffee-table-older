@@ -18,6 +18,10 @@
             (html
              [:div#coffee-table-app
               (if (= mode :list)
-                (list/summary-list visits)
+                [:div
+                 (list/summary-list visits)
+                 [:button.ui.fluid.button
+                  {:onClick #(om/transact! this `[(~'visit/new) :app/buffer :app/editing :app/mode])}
+                  "Add Visit"]]
                 (view/visit-view {:app/buffer buffer
                                   :app/editing editing}))]))))
