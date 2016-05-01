@@ -2,6 +2,10 @@
   :description "A site for reviewing cafés"
   :url "http://github.com/RobotDisco/coffee-table"
   :dependencies [[org.clojure/clojure "1.8.0"]
+                 [org.danielsz/system "0.2.0"]
+                 [bidi "2.0.9"]
+                 [environ "1.0.2"]
+                 [ring "1.4.0"]
                  [org.clojure/clojurescript "1.7.228"]
                  [org.omcljs/om "1.0.0-alpha32" :exclusions [cljsjs/react]]
                  [sablono "0.6.3"]
@@ -12,6 +16,7 @@
                  [devcards "0.2.1-6" :exclusions [cljsjs/react]]]
   :repl-options {:nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
   :plugins [[lein-cljsbuild "1.1.3"]
+            [lein-environ "1.0.2"]
             [lein-figwheel "0.5.0-4"]
             [lein-doo "0.1.6"]]
   :cljsbuild {:builds [{:id "dev"
@@ -45,5 +50,7 @@
                                    :optimizations :advanced
                                    :pretty-print false}}]}
   :profiles {:dev {:dependencies [[com.cemerick/piggieback "0.2.1"]
-                                  [figwheel-sidecar "0.5.0-4"]]
-                   :source-paths ["src/cljs"]}})
+                                  [figwheel-sidecar "0.5.0-4"]
+                                  [reloaded.repl "0.2.1"]]
+                   :source-paths ["dev" "src/cljs" "src/clj"]
+                   :env {:http-port 3000 :cider-port 7888}}})
