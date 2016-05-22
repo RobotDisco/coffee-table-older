@@ -4,6 +4,7 @@
             [om.next :as om :refer-macros [defui]]
             [sablono.core :as html :refer-macros [html]]
             [om-next-semantic.rating :refer [Rating]]
+            [cljs-time.coerce :refer [from-date]]
             [cljs-time.format :refer [unparse formatters]]))
 
 (defn handle-select [this id]
@@ -28,7 +29,7 @@
               [:div
                [:i.calendar.icon]
                [:span (unparse (formatters :date)
-                               date)]]]))))
+                               (from-date date))]]]))))
 
 (def mobile-summary-item (om/factory MobileSummaryItem {:keyfn :db/id}))
 

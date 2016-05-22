@@ -111,6 +111,12 @@
   (let [st @state]
     {:value (get st key)}))
 
+(defmethod read :app/visits
+  [{:keys [query state]} key _]
+  (let [st @state]
+    {:value (om/db->tree query (get st key) st)
+     :remote true}))
+
 (defmethod read :default
   [{:keys [query state]} key _]
   (let [st @state]
