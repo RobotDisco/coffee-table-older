@@ -54,7 +54,7 @@
     {:value {:keys [:app/editing :visits/by-id]}
      :action (fn []
                (swap! state assoc-in [:visits/by-id id] buffer)
-               (swap! state assoc [:app/editing false])
+               (swap! state assoc :app/editing false)
                (swap! state assoc :app/mode :list))}))
 
 (defmethod mutate 'buffer/revert
