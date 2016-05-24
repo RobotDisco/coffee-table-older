@@ -18,11 +18,9 @@
                  [cljsjs/semantic-ui "2.1.8-0"]
                  [devcards "0.2.1-6" :exclusions [cljsjs/react]]
                  [com.cognitect/transit-clj "0.8.285"]]
-  :figwheel {:ring-handler coffee-table.handler/app}
   :repl-options {:nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
   :plugins [[lein-cljsbuild "1.1.3"]
             [lein-environ "1.0.2"]
-            [lein-figwheel "0.5.0-4"]
             [lein-doo "0.1.6"]]
   :cljsbuild {:builds [{:id "dev"
                         :figwheel true

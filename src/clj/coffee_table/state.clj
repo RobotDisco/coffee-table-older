@@ -1,8 +1,7 @@
 (ns coffee-table.state
   (:require [clj-time.core :as time]))
 
-(def visits [{:db/id 1
-              :visit/name "FKA Twigs Cafe"
+(def visits [{:visit/name "FKA Twigs Cafe"
               :visit/date (time/now)
               :visit/address {:address/address1 "117 Grimes Boulevard"
                               :address/address2 "CPL 593H Suite"

@@ -5,9 +5,11 @@
              #_ [repl-server :refer [new-repl-server]]
              #_ [cider-repl-server :refer [new-cider-repl-server]]
              #_ [datomic-server :refer [new-datomic-db]])
+            [figwheel-sidecar.system :as figwheel]
             [environ.core :refer [env]]
             [coffee-table.handler :refer [app]]))
 
 (defsystem dev-system
   [:web (new-web-server (Integer. (env :http-port)) app)
+   :figwheel (figwheel/figwheel-system (figwheel/fetch-config))
    #_ :cider #_ (new-cider-repl-server (Integer. (env :cider-port)))])
