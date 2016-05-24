@@ -47,11 +47,12 @@
        (swap! state assoc :app/mode :visit)))})
 
 (defmethod mutate 'buffer/save
-  [{:keys [state]} _ _]
+  [{:keys [ast state]} _ _]
   (let [st @state
         {:keys [app/buffer app/editing visits/by-id]} st
         {:keys [db/id]} buffer]
-    {:value {:keys [:app/editing :visits/by-id]}
+    {:value {:keys [:app/editing [:visits/by-id id]]}
+     :remote (assoc ast :params {:data buffer})
      :action (fn []
                (swap! state assoc-in [:visits/by-id id] buffer)
                (swap! state assoc :app/editing false)

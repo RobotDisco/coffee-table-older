@@ -13,7 +13,7 @@
 
 (defn send [query cb]
   (POST "/query" {:params (:remote query)
-                  :handler #(handler % cb)}))
+                  :handler #(cb %)}))
 
 (defonce reconciler (om/reconciler {:state state/app-state
                                     :parser parser/parser

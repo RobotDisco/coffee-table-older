@@ -28,7 +28,7 @@
 (defn query
   [{:keys [params body]}]
   (let [query-env {:state state/app-state}
-        result ((om/parser {:read parser/readf}) query-env body)]
+        result ((om/parser {:read parser/readf :mutate parser/mutatef}) query-env body)]
     {:status 200 :headers {"Content-Type" "application/transit+json"} :body result}))
 
 (defn handler [request]

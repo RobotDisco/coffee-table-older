@@ -9,5 +9,16 @@
 
 (defmethod readf :app/visits
   [{:keys [state]} key _]
-  (let [st @state]
-    {:value (:app/visits st)}))
+  (let [st @state
+        fn (fn [idx item]
+             (assoc item :db/id idx))]
+    {:value (into [] (map-indexed fn (:app/visits st)))}))
+
+(defmulti mutatef om/dispatch)
+
+(defmethod mutatef 'buffer/save
+  [{:keys [state]} key {:keys [data]}]
+  {:value {:keys [:app/visits]}
+   :action (fn []
+             (let [{:keys [db/id]} data]
+               (swap! state assoc-in [:app/visits id] (dissoc data :db/id))))})
