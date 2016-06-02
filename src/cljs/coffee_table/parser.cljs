@@ -74,12 +74,13 @@
    :action #(swap! state assoc :app/editing true)})
 
 (defmethod mutate 'visit/delete
-  [{:keys [state]} _ _]
+  [{:keys [state ast]} _ _]
   (let [st @state
         {:keys [:app/buffer]} st
         {:keys [db/id]} buffer
         remove-fn #(= [:visits/by-id id] %)]
     {:value {:keys [:app/visits :app/by-id :app/editing :app/mode]}
+     :remote (assoc ast :params {:db/id id})
      :action (fn []
                (swap! state update :app/visits (fn [x] (into [] (remove remove-fn x))))
                (swap! state assoc :app/editing false)

@@ -22,3 +22,10 @@
    :action (fn []
              (let [{:keys [db/id]} data]
                (swap! state assoc-in [:app/visits id] (dissoc data :db/id))))})
+
+(defmethod mutatef 'visit/delete
+  [{:keys [state]} key {:keys [db/id]}]
+  {:value {:keys [:app/visits]}
+   :action (fn []
+             (let [{:keys [app/visits]} @state]
+               (swap! state assoc :app/visits (vec (concat (subvec visits 0 id) (subvec visits (inc id)))))))})

@@ -5,6 +5,7 @@
             [om.next.server :as om]
             [ring.middleware.resource :refer [wrap-resource]]
             [ring.middleware.transit :refer [wrap-transit-body wrap-transit-response]]
+            [ring.middleware.stacktrace :refer [wrap-stacktrace]]
             [cognitect.transit :as transit]
             [ring.util.response :as res]))
 
@@ -44,3 +45,7 @@
       wrap-transit-body
       (wrap-transit-response {:opts {:handlers {org.joda.time.DateTime joda-time-writer}}})
       (wrap-resource "public")))
+
+(def dev-app
+  (-> app
+      wrap-stacktrace))

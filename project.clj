@@ -2,7 +2,7 @@
   :description "A site for reviewing cafés"
   :url "http://github.com/RobotDisco/coffee-table"
   :dependencies [[org.clojure/clojure "1.8.0"]
-                 [org.danielsz/system "0.2.0"]
+                 [org.danielsz/system "0.3.0"]
                  [bidi "2.0.9"]
                  [environ "1.0.2"]
                  [ring "1.4.0"]
@@ -53,7 +53,6 @@
                                    :optimizations :advanced
                                    :pretty-print false}}]}
   :profiles {:dev {:dependencies [[com.cemerick/piggieback "0.2.1"]
-                                  [figwheel-sidecar "0.5.0-4"]
-                                  [reloaded.repl "0.2.1"]]
+                                  [figwheel-sidecar "0.5.0-4"]]
                    :source-paths ["dev" "src/cljs" "src/clj"]
                    :env {:http-port 3000 :cider-port 7888}}})

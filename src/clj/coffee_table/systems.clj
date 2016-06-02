@@ -7,9 +7,9 @@
              #_ [datomic-server :refer [new-datomic-db]])
             [figwheel-sidecar.system :as figwheel]
             [environ.core :refer [env]]
-            [coffee-table.handler :refer [app]]))
+            [coffee-table.handler :refer [dev-app app]]))
 
 (defsystem dev-system
-  [:web (new-web-server (Integer. (env :http-port)) app)
+  [:web (new-web-server (Integer. (env :http-port)) dev-app)
    :figwheel (figwheel/figwheel-system (figwheel/fetch-config))
    #_ :cider #_ (new-cider-repl-server (Integer. (env :cider-port)))])
