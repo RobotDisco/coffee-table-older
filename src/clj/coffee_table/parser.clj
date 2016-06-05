@@ -23,6 +23,12 @@
              (let [{:keys [db/id]} data]
                (swap! state assoc-in [:app/visits id] (dissoc data :db/id))))})
 
+(defmethod mutatef 'visit/add
+  [{:keys [state]} key {:keys [data]}]
+  {:value {:keys [:app/visits]}
+   :action (fn []
+             (swap! state update :app/visits conj data))})
+
 (defmethod mutatef 'visit/delete
   [{:keys [state]} key {:keys [db/id]}]
   {:value {:keys [:app/visits]}

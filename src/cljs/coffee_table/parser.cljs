@@ -58,6 +58,16 @@
                (swap! state assoc :app/editing false)
                (swap! state assoc :app/mode :list))}))
 
+(defmethod mutate 'visit/add
+  [{:keys [state ast]} _ _]
+  (let [st @state
+        {:keys [app/buffer]} st]
+    {:value {:keys [:app/visits :app/mode :app/editing]}
+     :remote (assoc ast :params {:data buffer})
+     :action (fn []
+               (swap! state assoc :app/editing false)
+               (swap! state assoc :app/mode :list))}))
+
 (defmethod mutate 'buffer/revert
   [{:keys [state]} _ _]
   (let [st @state
