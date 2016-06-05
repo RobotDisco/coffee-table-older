@@ -68,7 +68,8 @@
                    (textField {:label "City"
                                :react-key "buffer-city"
                                :value (get-in buffer [:visit/address :address/city])
-                               :readOnly (not editing)})
+                               :readOnly (not editing)
+                               :onChange (changeFieldHandler this [:visit/address :address/city])})
                    (textField {:label "Espresso Machine"
                                :react-key "buffer-machine"
                                :value (:visit/espresso-machine buffer)
