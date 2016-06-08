@@ -18,7 +18,8 @@
                  [cljsjs/semantic-ui "2.1.8-0"]
                  [devcards "0.2.1-6" :exclusions [cljsjs/react]]
                  [com.cognitect/transit-clj "0.8.285"]
-                 [com.cognitect/transit-cljs "0.8.237"]]
+                 [com.cognitect/transit-cljs "0.8.237"]
+                 [com.datomic/datomic-free "0.9.5372"]]
   :repl-options {:nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
   :plugins [[lein-cljsbuild "1.1.3"]
             [lein-environ "1.0.2"]
