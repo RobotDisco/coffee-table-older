@@ -1,4 +1,39 @@
 [
+ ;; Address
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :address/address1
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Street address of café"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :address/address2
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Unit or additional address info"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :address/city
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db.install/_attribute :db.part/db}
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :address/region
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Province, State, whatever"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :address/country
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db.install/_attribute :db.part/db}
+
  ;; Visits
 
  {:db/id #db/id[:db.part/db]
@@ -13,6 +48,14 @@
   :db/valueType :db.type/instant
   :db/cardinality :db.cardinality/one
   :db/doc "Date of visit"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :visit/address
+  :db/isComponent true
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc "Address of café"
   :db.install/_attribute :db.part/db}
 
  {:db/id #db/id[:db.part/db]
@@ -90,41 +133,6 @@
   :db/valueType :db.type/string
   :db/cardinality :db.cardinality/one
   :db/doc "Other Notes on café visit"
-  :db.install/_attribute :db.part/db}
-
- ;; Address
-
- {:db/id #db/id[:db.part/db]
-  :db/ident :address/address1
-  :db/valueType :db.type/string
-  :db/cardinality :db.cardinality/one
-  :db/doc "Street address of café"
-  :db.install/_attribute :db.part/db}
-
- {:db/id #db/id[:db.part/db]
-  :db/ident :address/address2
-  :db/valueType :db.type/string
-  :db/cardinality :db.cardinality/one
-  :db/doc "Unit or additional address info"
-  :db.install/_attribute :db.part/db}
-
- {:db/id #db/id[:db.part/db]
-  :db/ident :address/city
-  :db/valueType :db.type/string
-  :db/cardinality :db.cardinality/one
-  :db.install/_attribute :db.part/db}
-
- {:db/id #db/id[:db.part/db]
-  :db/ident :address/region
-  :db/valueType :db.type/string
-  :db/cardinality :db.cardinality/one
-  :db/doc "Province, State, whatever"
-  :db.install/_attribute :db.part/db}
-
- {:db/id #db/id[:db.part/db]
-  :db/ident :address/country
-  :db/valueType :db.type/string
-  :db/cardinality :db.cardinality/one
   :db.install/_attribute :db.part/db}
 
  ]
