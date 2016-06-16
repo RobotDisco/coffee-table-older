@@ -1,5 +1,6 @@
 (ns coffee-table.handler
-  (:require [coffee-table.parser :as parser]
+  (:require [clojure.walk :as walk]
+            [coffee-table.parser :as parser]
             [coffee-table.state :as state]
             [bidi.bidi :as bidi]
             [om.next.server :as om]
@@ -7,7 +8,9 @@
             [ring.middleware.transit :refer [wrap-transit-body wrap-transit-response]]
             [ring.middleware.stacktrace :refer [wrap-stacktrace]]
             [cognitect.transit :as transit]
-            [ring.util.response :as res]))
+            [ring.util.response :as res]
+            [clojure.walk :as walk]
+            [datomic.api :as d]))
 
 
 (def joda-time-writer
@@ -28,9 +31,12 @@
 
 (defn query
   [{:keys [params body]}]
-  (let [query-env {:state state/app-state}
-        result ((om/parser {:read parser/readf :mutate parser/mutatef}) query-env body)]
-    {:status 200 :headers {"Content-Type" "application/transit+json"} :body result}))
+  (let [result ((om/parser {:read parser/readf :mutate parser/mutatef})
+                {:conn (d/connect "datomic:free://localhost:4334/coffee-table")} body)
+        result' (walk/postwalk (fn [x]
+                                 (if (and (sequential? x) (= :result (first x)))
+                                   [(first x) (dissoc (second x) :db-before :db-after :tx-dats)] x)) result)]
+    {:status 200 :headers {"Content-Type" "application/transit+json"} :body result'}))
 
 (defn handler [request]
   (let [match (bidi/match-route routes (:uri request)

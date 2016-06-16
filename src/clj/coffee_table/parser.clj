@@ -1,18 +1,22 @@
 (ns coffee-table.parser
-  (:require [om.next.server :as om]))
+  (:require [om.next.server :as om]
+            [coffee-table.queries :as q]
+            [datomic.api :as d]))
 
 (defmulti readf om/dispatch)
 
 (defmethod readf :default
-  [_ _ _]
-  {:value :notfound})
+  [_ k _]
+  (println "default read " k)
+  {:value {:error (str "No handler for read key " k)}})
 
 (defmethod readf :app/visits
-  [{:keys [state]} key _]
-  (let [st @state
-        fn (fn [idx item]
-             (assoc item :db/id idx))]
-    {:value (into [] (map-indexed fn (:app/visits st)))}))
+  [{:keys [conn query]} _ params]
+  {:value (q/visits (d/db conn) #_ query '[*] params)})
+
+(defmethod readf :visits/by-id
+  [{:keys [conn query]} _ {:keys [id]}]
+  {:value (d/pull @(d/sync conn) (or query '[*]) id)})
 
 (defmulti mutatef om/dispatch)
 

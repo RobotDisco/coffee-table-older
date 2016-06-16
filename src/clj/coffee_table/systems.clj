@@ -12,5 +12,5 @@
 (defsystem dev-system
   [:web (new-web-server (Integer. (env :http-port)) dev-app)
    :figwheel (figwheel/figwheel-system (figwheel/fetch-config))
-   :datomic (new-datomic-db "datomic:mem://coffee-table")
+   :datomic (new-datomic-db "datomic:free://localhost:4334/coffee-table")
    #_ :cider #_ (new-cider-repl-server (Integer. (env :cider-port)))])

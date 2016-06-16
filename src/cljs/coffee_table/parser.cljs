@@ -114,6 +114,10 @@
     {:value (om/db->tree query (get st key) st)
      :remote true}))
 
+(defmethod read :visits/by-id
+  [{:keys [query]} key _]
+  {:remote true})
+
 (defmethod read :default
   [{:keys [query state]} key _]
   (let [st @state]

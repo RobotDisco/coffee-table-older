@@ -1,0 +1,19 @@
+[{:db/id #db/id[:db.part/user]
+  :visit/name "FKA Twigs Cafe"
+  :visit/date #inst "2014-07-18T04:20:00.000"
+  :visit/address {:address/address1 "117 Grimes Boulevard"
+                  :address/address2 "CPL 593H Suite"
+                  :address/city "Toronto"
+                  :address/region "Ontario"
+                  :address/country "Canada"}
+  :visit/espresso-machine "Elektra Micro Casa a Leva"
+  :visit/grinder "Mazzer Stepless Doserless"
+  :visit/roast "Intelligentsia Diablo"
+  :visit/beverage-ordered "Single shot espresso"
+  :visit/beverage-rating 4
+  :visit/beverage-notes "Something something something"
+  :visit/service-rating 3
+  :visit/service-notes "Something something something"
+  :visit/ambience-rating 5
+  :visit/ambience-notes "Something something something"
+  :visit/other-notes "Something something something"}]
