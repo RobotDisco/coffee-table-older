@@ -199,8 +199,98 @@
 		     :visit/name "Some other café"
 		     :visit/beverage-rating 2}}
 					</code></pre>
-				</section
-			    </section>>
+				</section>
+			    </section>
+			    <section data-markdown>
+				<script type="text/template">
+				    ### Queries
+				    ```
+(defui ^:once MobileSummaryItem
+  static om/IQuery
+  (query [this] '[:db/id :visit/name :visit/date :visit/beverage-rating])
+				    ```
+				    Read these values from global state
+				    ```
+				    '[:app/mode :app/beverage-buffer]
+				    ```
+				    Fetch deduped item by ref
+				    ```
+				    '[[:by/visit 1]]
+				    ```
+				    Only get :visit/id and :visit/name from [:by/visit 1] query
+				    ```
+				    '[{[:by/visit 1] [:visit/id :visit/name]}]
+				    ```
+				</script>
+			    </section>
+			    <section>
+				<section>
+				    <h3>Parser</h3>
+				    <ul>
+					<li>Engine for getting/sending attributes</li>
+					<li>Major source of complexity in Om.Next</li>
+					<li>Can be explored well beyond scope of presentation</li>
+				    </ul>
+				    <p><strong>BUT!</strong></p>
+				    <ul>
+					<li>read and mutate functions have _same_ signature!</li>
+				    </ul>
+				</section>
+				<section>
+				    <h3>Reading values</h3>
+				    <pre><code>
+(defmulti read om/dispatch)
+
+(defmethod read :app/list-mode
+  [{:keys [state]} key params])
+  {:value {keys [:app/editing]
+  (let [st @state]
+    {:value (get st key)})}}
+				    </code></pre>
+				</section>
+				<section>
+				    <h3>Mutating app state (Component)</h3>
+				    <pre><code>
+(defn handle-select [this id]
+  (om/transact! this `[(visit/display {:id ~id}) :app/mode :app/buffer]))
+
+(defui ^:once MobileSummaryItem
+  ...
+  (render [this]
+    (let [props (om/props this)
+	  {:keys [db/id] props}]
+      (dom nil
+	...
+	(dom/button #js {:onClick #(handle-select this id)})
+	...))))
+				    </code></pre>
+				</section>
+				<section>
+				    <h3>Mutating app state (Parser)</h3>
+				    <pre><code>
+(defmethod mutate 'app/list-mode
+  [{:keys [state]} _ _]
+  {:value {:keys [:app/editing :app/mode]}
+   :action (fn []
+	     (let [st @state]
+	       (swap! state assoc :app/editing false)
+	       (swap! state assoc :app/mode :list)))})
+				    </code></pre>
+				</section>
+				<section>
+				    <h3>Read + Mutate == Parser</h3>
+				    <pre><code>
+(def parser (om/parser {:read read :mutate mutate}))
+				    </code></pre>
+				</section>
+			    </section>
+			    <section>
+				<h3>Putting it all together</h3>
+			    </section>
+			    <section>
+				<section>Server-side Parser</section>
+				<section>om.next.server + Compojure</section>
+			    </section>
 			</div>
 		</div>
 
