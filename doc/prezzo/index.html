@@ -1,0 +1,225 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Grappling with Om.Next</title>
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/simple.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+			    <section data-markdown>
+				<script type="text/template">
+				    ## Grappling with Om Next
+
+				    #### Gaelan D'costa
+
+				    #### gdcosta@gmail.com
+				</script>
+			    </section>
+			    <section data-markdown>
+				<script type="text/template">
+				    <a href="http://localhost:3000">What I was actually trying to do</a>
+				</script>
+			    </section>
+			    <section data-markdown>
+				<script type="text/template">
+				    ### Why Om.Next?
+
+				    * David Nolen
+				    * Made most intuitive sense compared to "heavier" frameworks
+				    * Logical extension of React.js & Reactive programming
+				</script>
+			    </section>
+			    <section data-markdown>
+				<script type="text/template">
+				    ### Why _not_ Om.Next?
+
+				    * It's too smart (No Docs, prevalence of "elegant" concepts)
+				    * Will this be obsoleted by Om.Nexter?
+				    * Thinly veiled excuse to use Datomic
+				</script>
+			    </section>
+			    <section data-markdown>
+				<script type="text/template">
+				    ### Purpose of Presentation
+
+				    * To get you _using_ Om.next
+				    * To prime you for the resources that already exist
+				    * _NOT_ to describe it thoroughly or precisely
+				    * _NOT_ to cover all of its features
+				</script>
+			    </section>
+			    <section>
+				<section data-markdown>
+				    <script type="text/template">
+					### Om.Next Foundations - MVC vs. Reactive
+				    </script>
+				</section>
+				<section>
+				    <h3>Model, View, Controller</h3>
+				    <img src="img/mvc.png">
+				</section>
+				<section>
+				    <h3>ReactJS</h3>
+				    <img src="img/react-arch.png">
+				</section>
+				<section>
+				    <h3> Things to unlearn</h3>
+				    <ul>
+					<li>Om.Prev -- UNLEARN EVERYTHING</li>
+					<li>Redux/Flux/etc... -- smart components a.k.a. containers</li>
+				    </ul>
+				    <strong>TL;DR -- Om.Next is a significant reinvention</strong>
+				</section>
+				<section>
+				    <h3>Om.Next</h3>
+				    <img src="img/om-next-arch.png">
+				</section>
+			    </section>
+			    <section>
+				<section>
+				    <h3>Om Component (Stateless)</h3>
+				    <pre><code>
+(defui mycomponent
+  Object
+  (render [this]
+    (let [{:keys myprop1 myprop2} (om/props this)]
+      (dom/div #js {:className "myclass"
+		    :style "text-align: left;"}
+	(dom/ul nil (dom/li myprop1)
+		    (dom/li myprop2))))))
+
+(def mycomponentf (om/factory mycomponent :keyfn :id
+					  :validator my-validator))</code></pre>
+				</section>
+				<section>
+				    <h3>Stateless Om Component 2</h3>
+				    <pre><code>
+(ns coffee-table.component.MobileSummaryList
+  (:require [om.next :as om :refer-macros [defui]]
+	    [om.dom :as dom]
+	    [coffee-table.component.MobileSummaryItem :as summary]))
+
+(defui MobileSummaryList
+  Object
+  (render [this]
+	  (let [widget summary/mobile-summary-item
+		visits (om/props this)]
+	    (apply dom/div nil
+		   (map widget visits)))))
+
+(def summary-list
+  (om/factory MobileSummaryList))
+				    </code></pre>
+				</section>
+				<section>
+				    <h3>Some additional protocols...</h3>
+				    <pre><code>
+(defui ^:once MobileSummaryItem
+  static om/Ident
+  (ident [this {:keys [db/id]}] [:visits/by-id id])
+  static om/IQuery
+  (query [this] '[:db/id :visit/name :visit/date :visit/beverage-rating])
+  Object
+  (render [this]
+	  (let [props (om/props this)
+	  ...
+				    </code></pre>
+				</section>
+				<section>
+				    <h3>React lifecycle</h3>
+				    <img src="img/react-lifecycle.jpg">
+				</section>
+			    </section>
+			    <section>
+				<section>
+				    <h3>Application State</h3>
+				    <pre><code>
+(defonce app-state
+  {:app/editing false
+   :app/buffer {}
+   :app/mode :list}
+   :app/visits [{:visit/id 1
+		 :visit/name "Hello World Café"
+		 :visit/beverage-rating 3}
+		{:visit/id 2
+		 :visit/name "Some other café"
+		 :visit/beverage-rating 2}])
+				    </code></pre>
+				</section>
+				<section>
+				    <h3>Application State Normalization</h3>
+				    <ul>
+					<li>Consolidates and de-duplicate items into internal-only hash tables in the application state</li>
+					<li>Hash tables are determined by any Ident declarations found on components on load-times</li>
+					<li>Enabled unless:
+					    <ul>
+						<li>You supply an atom to Om as the state</li>
+						<li>You set the normalization flag to false when initializing the reconciler</li
+					    </ul>
+					</li>
+				    </ul>
+				</section>
+				<section>
+				    <h3>Normalization in action</h3>
+					The following widget:
+					<pre><code>
+(defui ^:once MobileSummaryItem
+  static om/Ident
+  (ident [this {:keys [visits/id]}] [:visits/by-id id])
+  ...
+					</code></pre>
+					results in the following internal state:
+					<pre><code>
+  {:app/editing false
+   :app/buffer {}
+   :app/mode :list
+   :app/visits [[:visit/by-id 1] [:visit/by-id 2]]
+   :visits/by-id {1 {:visit/id 1
+		     :visit/name "Hello World Café"
+		     :visit/beverage-rating 3}
+		  2 {:visit/id 2
+		     :visit/name "Some other café"
+		     :visit/beverage-rating 2}}
+					</code></pre>
+				</section
+			    </section>>
+			</div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				history: true,
+
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>

@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Understanding Om.Next</title>
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/simple.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+			    <section data-markdown>
+				<script type="text/template">
+				    ## Understanding Om Next
+
+				    #### Gaelan D'costa
+
+				    #### gdcosta@gmail.com
+				</script>
+			    </section>
+			    <section data-markdown>
+				<script type="text/template">
+				    <a href="http://localhost:3000">What I was actually trying to do</a>
+				</script>
+			    </section>
+			    <section data-markdown>
+				<script type="text/template">
+				    ### Why Om.Next?
+
+				    * David Nolen
+				    * Made most intuitive sense compared to "heavier" frameworks
+				    * Logical extension of React.js & Reactive programming
+				</script>
+			    </section>
+			    <section data-markdown>
+				<script type="text/template">
+				    ### Why _not_ Om.Next?
+
+				    * 2 Smart 4 U (No Docs, prevalence of "elegant" concepts)
+				    * Will this be obsoleted by Om.Nexter?
+				    * Thinly veiled excuse to use Datomic
+				</script>
+			    </section>
+			    <section data-markdown>
+				<script type="text/template">
+				    ### Om.Next Foundations - MVC vs. Reactive
+				</script>
+			    </section>
+
+
+			</div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				history: true,
+
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>
