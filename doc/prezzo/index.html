@@ -286,10 +286,81 @@
 			    </section>
 			    <section>
 				<h3>Putting it all together</h3>
+				<pre><code>
+(defonce reconciler (om/reconciler {:state state/app-state
+				    :parser parser/parser}))
+
+(om/add-root! reconciler App (gdom/getElement "app"))
+				</code></pre>
 			    </section>
 			    <section>
-				<section>Server-side Parser</section>
-				<section>om.next.server + Compojure</section>
+				<h1>ESCAPE WHILE YOU CAN</h1>
+			    </section>
+			    <section>
+				<section>
+				    <h3>Server-side Om.Next</h3>
+				    <ul>
+					<li>Server-side read/mutate parsers</li>
+					<li>surprise surprise, leverages Cognitect's "Transit" protocol</li>
+				    </ul>
+				</section>
+				<section>
+				    <h3>Client-side configuration (CLJS)</h3>
+				    <pre><code>
+(ns coffee-table.core
+  (:require [ajax.core :refer [POST transit-request-format]]))
+
+(defn send [query cb]
+  (POST "/query" {:params (:remote query)
+		  :format (transit-request-format {
+		    :writer (transit/writer :json transit-writers)})
+		  :handler #(cb %)}))
+
+(defonce reconciler (om/reconciler {:state state/app-state
+				    :parser parser/parser
+				    :send send}))
+				    </code></pre>
+				</section>
+				<section>
+				    <h3>om.next server-side parsing</h3>
+				    <pre><code>
+(ns coffee-table.parser
+  (:require [om.next.server :as om]))
+
+(defmulti readf om/dispatch)
+
+(defmethod readf :default
+  [_ _ _]
+  {:value :notfound})
+
+(defmethod readf :app/visits
+  [{:keys [state]} key _]
+  (let [st @state
+	fn (fn [idx item]
+	     (assoc item :db/id idx))]
+    {:value (into [] (map-indexed fn (:app/visits st)))}))
+				    </code></pre>
+				</section>
+				<section>
+				    <h3>om.next.server + Compojure</h3>
+				    <pre><code>
+(defn query
+  [{:keys [params body]}]
+  (let [query-env {:state state/app-state}
+	result ((om.next.server/parser
+		  {:read parser/readf
+		   :mutate parser/mutatef}) query-env body)]
+    {:status 200
+     :headers {"Content-Type" "application/transit+json"}
+     :body result}))
+
+(def app
+  (-> handler
+      wrap-transit-body
+      wrap-transit-response
+      (wrap-resource "public")))
+				    </code></pre>
+				</section>
 			    </section>
 			</div>
 		</div>
