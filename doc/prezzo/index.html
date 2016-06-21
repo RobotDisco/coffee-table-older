@@ -24,64 +24,85 @@
 	<body>
 		<div class="reveal">
 			<div class="slides">
-			    <section data-markdown>
-				<script type="text/template">
-				    ## Grappling with Om Next
-
-				    #### Gaelan D'costa
-
-				    #### gdcosta@gmail.com
-				</script>
-			    </section>
-			    <section data-markdown>
-				<script type="text/template">
-				    <a href="http://localhost:3000">What I was actually trying to do</a>
-				</script>
-			    </section>
-			    <section data-markdown>
-				<script type="text/template">
-				    ### Why Om.Next?
-
-				    * David Nolen
-				    * Made most intuitive sense compared to "heavier" frameworks
-				    * Logical extension of React.js & Reactive programming
-				</script>
-			    </section>
-			    <section data-markdown>
-				<script type="text/template">
-				    ### Why _not_ Om.Next?
-
-				    * It's too smart (No Docs, prevalence of "elegant" concepts)
-				    * Will this be obsoleted by Om.Nexter?
-				    * Thinly veiled excuse to use Datomic
-				</script>
-			    </section>
-			    <section data-markdown>
-				<script type="text/template">
-				    ### Purpose of Presentation
-
-				    * To get you _using_ Om.next
-				    * To prime you for the resources that already exist
-				    * _NOT_ to describe it thoroughly or precisely
-				    * _NOT_ to cover all of its features
-				</script>
+			    <section>
+				<h3>Grappling with Om Next</h3>
 			    </section>
 			    <section>
-				<section data-markdown>
-				    <script type="text/template">
-					### Om.Next Foundations - MVC vs. Reactive
-				    </script>
+				<h3>Who Am I?</h3>
+				<br />
+				<div>
+				    <div style="width: 25%; float: left;">
+					<img src="img/portrait.jpg">
+				    </div>
+				    <div style="width: 75%; float: right;">
+					    <p>~2 year Clojure hobby</p>
+					    <p>Om.next first app attempt</p>
+					    <br />
+					    <p>Gaelan D'costa</p>
+					    <p>gdcosta@gmail.com</p>
+					</ul>
+				    </div>
+				</div>
+			    </section>
+			    <section>
+				    <a href="http://localhost:3000">What I was actually trying to do</a>
+				    <br />
+				    <h4>Coffee Table -- Personal Cafe review site</h4>
+				    <br />
+				    <p><a href="http://github.com/RobotDisco/coffee-table">http://github.com/RobotDisco/coffee-table</a></p>
+			    </section>
+			    <section>
+				<h3>Why did I choose Om.Next?</h3>
+				<br />
+				<ul>
+				    <li>Made by the Clojurescript guys</li>
+				    <li>David Nolen</li>
+				    <li>Reagent hadn't (yet) caught up</li>
+				    <li>Made most intuitive sense</li>
+				    <li>Conceptual Strength</li>
+				</ul>
+			    </section>
+			    <section>
+				<h3>Why <em>not</em> Om.Next?</h3>
+				<br />
+				<ul>
+				    <li>It's too smart (No Docs, prevalence of "elegant" concepts)</li>
+				    <li>Coupling b/w App State & Component Tree</li>
+				    <li>Will this be obsoleted by Om.Nexter?</li>
+				    <li>"Innovative" query language / parser
+					<ul>
+					    <li>a.k.a. Datomic advertisement</li>
+					</ul>
+				    </li>
+				</ul>
+			    </section>
+			    <section>
+				<h3>Purpose of Presentation</h3>
+				<br />
+				<ul>
+				    <li>Present a _working_ knowledge of Om.next</li>
+				    <li>Prime audience for resources that already exist</li>
+				    <li><strong>NOT</strong> to describe it thoroughly or precisely</li>
+				    <li><strong>NOT</strong> to cover all of its features</li>
+				</ul>
+			    </section>
+			    <section>
+				<section>
+				    <h3>Software Patterns</h3>
 				</section>
 				<section>
 				    <h3>Model, View, Controller</h3>
+				    <br />
 				    <img src="img/mvc.png">
 				</section>
 				<section>
 				    <h3>ReactJS</h3>
+				    <br />
 				    <img src="img/react-arch.png">
 				</section>
 				<section>
 				    <h3> Things to unlearn</h3>
+				    <br />
 				    <ul>
 					<li>Om.Prev -- UNLEARN EVERYTHING</li>
 					<li>Redux/Flux/etc... -- smart components a.k.a. containers</li>
@@ -90,12 +111,14 @@
 				</section>
 				<section>
 				    <h3>Om.Next</h3>
+				    <br />
 				    <img src="img/om-next-arch.png">
 				</section>
 			    </section>
 			    <section>
 				<section>
 				    <h3>Om Component (Stateless)</h3>
+				    <br />
 				    <pre><code>
 (defui mycomponent
   Object
@@ -111,6 +134,7 @@
 				</section>
 				<section>
 				    <h3>Stateless Om Component 2</h3>
+				    <br />
 				    <pre><code>
 (ns coffee-table.component.MobileSummaryList
   (:require [om.next :as om :refer-macros [defui]]
@@ -131,6 +155,7 @@
 				</section>
 				<section>
 				    <h3>Some additional protocols...</h3>
+				    <br />
 				    <pre><code>
 (defui ^:once MobileSummaryItem
   static om/Ident
@@ -145,8 +170,16 @@
 				</section>
 				<section>
 				    <h3>React lifecycle</h3>
+				    <br />
 				    <img src="img/react-lifecycle.jpg">
 				</section>
+			    </section>
+			    <section>
+				<h3>Foreboding</h3>
+				<br />
+				<p>Does the application state flow clealy down the component tree? Not quite</p>
+				<p>Redux encapsulates app-state-aware components from reusable components</p>
+				<p>Om.Next's app state mirrors component tree ... you'll see how</p>
 			    </section>
 			    <section>
 				<section>
