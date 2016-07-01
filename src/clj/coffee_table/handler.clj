@@ -1,7 +1,6 @@
 (ns coffee-table.handler
   (:require [clojure.walk :as walk]
             [coffee-table.parser :as parser]
-            [coffee-table.state :as state]
             [bidi.bidi :as bidi]
             [om.next.server :as om]
             [ring.middleware.resource :refer [wrap-resource]]
@@ -10,7 +9,8 @@
             [cognitect.transit :as transit]
             [ring.util.response :as res]
             [clojure.walk :as walk]
-            [datomic.api :as d]))
+            [datomic.api :as d]
+            [om.next.impl.parser :as omp]))
 
 
 (def joda-time-writer
@@ -29,13 +29,18 @@
   (assoc (res/resource-response (str "index.html") {:root "public"})
          :headers {"Content-Type" "text/html"}))
 
+(defn mutation? [query]
+  (some (comp symbol? :dispatch-key) (:children (omp/query->ast query))))
+
 (defn query
   [{:keys [params body]}]
   (let [result ((om/parser {:read parser/readf :mutate parser/mutatef})
                 {:conn (d/connect "datomic:free://localhost:4334/coffee-table")} body)
-        result' (walk/postwalk (fn [x]
-                                 (if (and (sequential? x) (= :result (first x)))
-                                   [(first x) (dissoc (second x) :db-before :db-after :tx-dats)] x)) result)]
+        result' (if (mutation? body)
+                  []
+                  (walk/postwalk (fn [x]
+                                   (if (and (sequential? x) (= :result (first x)))
+                                     [(first x) (dissoc (second x) :db-before :db-after :tx-data)] x)) result))]
     {:status 200 :headers {"Content-Type" "application/transit+json"} :body result'}))
 
 (defn handler [request]

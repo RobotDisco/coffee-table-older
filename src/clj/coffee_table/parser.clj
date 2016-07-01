@@ -21,21 +21,21 @@
 (defmulti mutatef om/dispatch)
 
 (defmethod mutatef 'buffer/save
-  [{:keys [state]} key {:keys [data]}]
-  {:value {:keys [:app/visits]}
+  [{:keys [conn]} key {:keys [data]}]
+  {:value {:keys [[:app/visits] [:visits/by-id (:db/id data)]]}
    :action (fn []
-             (let [{:keys [db/id]} data]
-               (swap! state assoc-in [:app/visits id] (dissoc data :db/id))))})
+             @(d/transact conn [data]))})
 
 (defmethod mutatef 'visit/add
-  [{:keys [state]} key {:keys [data]}]
+  [{:keys [conn]} key {:keys [data]}]
   {:value {:keys [:app/visits]}
    :action (fn []
-             (swap! state update :app/visits conj data))})
+             @(d/transact conn [(merge
+                                 {:db/id (d/tempid -1)}
+                                 data)]))})
 
 (defmethod mutatef 'visit/delete
-  [{:keys [state]} key {:keys [db/id]}]
-  {:value {:keys [:app/visits]}
+  [{:keys [conn]} key {:keys [db/id]}]
+  {:value {:keys [:app/visits [:visits/by-id id]]}
    :action (fn []
-             (let [{:keys [app/visits]} @state]
-               (swap! state assoc :app/visits (vec (concat (subvec visits 0 id) (subvec visits (inc id)))))))})
+             @(d/transact conn [[:db.fn/retractEntity id]]))})
