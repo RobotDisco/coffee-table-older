@@ -10,7 +10,8 @@
             [ring.util.response :as res]
             [clojure.walk :as walk]
             [datomic.api :as d]
-            [om.next.impl.parser :as omp]))
+            [om.next.impl.parser :as omp]
+            [coffee-table.datomic :refer [datomic-uri]]))
 
 
 (def joda-time-writer
@@ -35,7 +36,7 @@
 (defn query
   [{:keys [params body]}]
   (let [result ((om/parser {:read parser/readf :mutate parser/mutatef})
-                {:conn (d/connect "datomic:free://localhost:4334/coffee-table")} body)
+                {:conn (d/connect datomic-uri)} body)
         result' (if (mutation? body)
                   []
                   (walk/postwalk (fn [x]

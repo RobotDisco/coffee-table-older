@@ -1,4 +1,4 @@
-(defproject coffee-table "0.0.1"
+(defproject coffee-table "0.5.0"
   :description "A site for reviewing cafés"
   :url "http://github.com/RobotDisco/coffee-table"
   :dependencies [[org.clojure/clojure "1.8.0"]
@@ -19,7 +19,8 @@
                  [devcards "0.2.1-6" :exclusions [cljsjs/react]]
                  [com.cognitect/transit-clj "0.8.285"]
                  [com.cognitect/transit-cljs "0.8.237"]
-                 [com.datomic/datomic-free "0.9.5372"]]
+                 [com.datomic/datomic-free "0.9.5372"]
+                 [io.rkn/conformity "0.4.0"]]
   :repl-options {:nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
   :plugins [[lein-cljsbuild "1.1.3"]
             [lein-environ "1.0.2"]
@@ -57,4 +58,4 @@
   :profiles {:dev {:dependencies [[com.cemerick/piggieback "0.2.1"]
                                   [figwheel-sidecar "0.5.0-4"]]
                    :source-paths ["dev" "src/cljs" "src/clj"]
-                   :env {:http-port 3000 :cider-port 7888}}})
+                   :env {:http-port 3000 :repl-port 7888}}})

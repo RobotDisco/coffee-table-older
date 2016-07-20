@@ -1,26 +1,23 @@
 (ns coffee-table.datomic
   (:require [datomic.api :as d]
             [com.stuartsierra.component :as component]
-            [clojure.java.io :as io])
+            [io.rkn.conformity :as c])
   (:import datomic.Util))
 
-(defrecord DatomicDatabase [uri schema initial-data connection]
+(def datomic-uri "datomic:free://localhost:4334/coffee-table")
+
+(defrecord DatomicDatabase [uri]
   component/Lifecycle
   (start [component]
     (d/create-database uri)
-    (let [c (d/connect uri)]
-      @(d/transact c schema)
-      @(d/transact c initial-data)
-      (assoc component
-             :conn c
-             :tx-report-queue (d/tx-report-queue c))))
+    (let [conn (d/connect uri)
+          norms (c/read-resource "data/000-initial-schema.edn")]
+      (c/ensure-conforms conn norms)
+      (d/release conn)
+      #_ (assoc component :conn conn)))
   (stop [component]
-    (d/remove-tx-report-queue (:conn component))
-    (d/delete-database uri)))
+    (when (:conn component) (d/release (:conn component)))
+    #_ (dissoc component :conn)))
 
-(defn new-database [db-uri]
-  (DatomicDatabase.
-   db-uri
-   (first (Util/readAll (io/reader (io/resource "data/schema.edn"))))
-   (first (Util/readAll (io/reader (io/resource "data/inital.edn"))))
-   nil))
+(defn new-datomic-database [db-uri]
+  (DatomicDatabase. db-uri))
