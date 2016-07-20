@@ -12,7 +12,7 @@
                  [sablono "0.6.3"]
                  [com.andrewmcveigh/cljs-time "0.4.0"]
                  [clj-time "0.11.0"]
-                 [cljs-react-test "0.1.3-SNAPSHOT"]
+                 #_ [cljs-react-test "0.1.3-SNAPSHOT"]
                  [cljs-ajax "0.5.4"]
                  [cljsjs/react-with-addons "15.0.1-0"]
                  [cljsjs/semantic-ui "2.1.8-0"]
@@ -22,9 +22,12 @@
                  [com.datomic/datomic-free "0.9.5372"]
                  [io.rkn/conformity "0.4.0"]]
   :repl-options {:nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
+  :repo :local
   :plugins [[lein-cljsbuild "1.1.3"]
             [lein-environ "1.0.2"]
             [lein-doo "0.1.6"]]
+  :main coffee-table.core
+  :aot [coffee-table.core]
   :cljsbuild {:builds [{:id "dev"
                         :figwheel true
                         :source-paths ["src/cljs"]
@@ -58,4 +61,9 @@
   :profiles {:dev {:dependencies [[com.cemerick/piggieback "0.2.1"]
                                   [figwheel-sidecar "0.5.0-4"]]
                    :source-paths ["dev" "src/cljs" "src/clj"]
-                   :env {:http-port 3000 :repl-port 7888}}})
+                   :env {:http-port 3000 :repl-port 7888}}
+             :uberjar {:dependencies [[com.cemerick/piggieback "0.2.1"]
+                                      [figwheel-sidecar "0.5.0-4"]
+                                      [org.clojure/tools.nrepl "0.2.11"]]
+                       :source-paths ["dev" "src/cljs" "src/clj"]
+                       :env {:http-port 3000 :repl-port 7888}}})
