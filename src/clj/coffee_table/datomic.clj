@@ -1,10 +1,11 @@
 (ns coffee-table.datomic
   (:require [datomic.api :as d]
             [com.stuartsierra.component :as component]
-            [io.rkn.conformity :as c])
+            [io.rkn.conformity :as c]
+            [environ.core :refer [env]])
   (:import datomic.Util))
 
-(def datomic-uri "datomic:free://localhost:4334/coffee-table")
+(def datomic-uri (env :datomic-uri))
 
 (defrecord DatomicDatabase [uri]
   component/Lifecycle

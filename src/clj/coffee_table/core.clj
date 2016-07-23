@@ -1,9 +1,10 @@
 (ns coffee-table.core
+  (:gen-class)
   (:require [coffee-table.systems :refer [prod-system]]
-            [com.stuartsierra.component :as component])
-  (:gen-class))
+            [system.repl :refer [set-init! start]]))
 
 (defn -main
   "Start the application"
   []
-  (alter-var-root #'prod-system component/start))
+  (set-init! #'prod-system)
+  (start))

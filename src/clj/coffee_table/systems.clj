@@ -16,4 +16,4 @@
 (defsystem prod-system
   [:web (new-web-server (Integer. (env :http-port)) dev-app)
    :datomic (new-datomic-database datomic-uri)
-   :repl (new-repl-server (Integer. (env :repl-port)))])
+   #_ :repl #_ (new-repl-server (Integer. (env :repl-port)))])

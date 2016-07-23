@@ -61,9 +61,10 @@
   :profiles {:dev {:dependencies [[com.cemerick/piggieback "0.2.1"]
                                   [figwheel-sidecar "0.5.0-4"]]
                    :source-paths ["dev" "src/cljs" "src/clj"]
-                   :env {:http-port 3000 :repl-port 7888}}
-             :uberjar {:dependencies [[com.cemerick/piggieback "0.2.1"]
-                                      [figwheel-sidecar "0.5.0-4"]
-                                      [org.clojure/tools.nrepl "0.2.11"]]
-                       :source-paths ["dev" "src/cljs" "src/clj"]
-                       :env {:http-port 3000 :repl-port 7888}}})
+                   :env {:http-port 3000 :repl-port 7888
+                         :datomic-uri "datomic:free://localhost:4334/coffee-table"}}
+             :prod {:dependencies [[com.cemerick/piggieback "0.2.1"]
+                                   [figwheel-sidecar "0.5.0-4"]
+                                   [org.clojure/tools.nrepl "0.2.11"]]
+                    :source-paths ["src/cljs" "src/clj"]
+                    :env {:http-port 3000}}})

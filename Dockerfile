@@ -11,6 +11,7 @@ RUN lein deps
 COPY . /srv/app
 
 ENV APP_ENV "prod"
+ENV DATOMIC_URL "datomic:free://datomic:4334/coffee-table"
 
-RUN mv "$(lein with-profile dev uberjar | sed -n 's/^Created \(.*standalone\.jar\)/\1/p')" app-standalone.jar
+RUN mv "$(lein with-profile prod uberjar | sed -n 's/^Created \(.*standalone\.jar\)/\1/p')" app-standalone.jar
 CMD ["java", "-jar", "app-standalone.jar"]
