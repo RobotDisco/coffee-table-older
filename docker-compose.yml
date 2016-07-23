@@ -1,0 +1,20 @@
+version: '2'
+services:
+
+    datomic:
+        image: akiel/datomic-free
+        environment:
+            ALT_HOST: datomic
+        volumes:
+            - ./data:/data
+            - ./log:/log
+    web:
+        build: .
+
+        ports:
+            - "3000:3000"
+        environment:
+            APP_ENV: "prod"
+            DATOMIC_URI: "datomic:free://datomic:4334/coffee-table"
+        volumes:
+            - ./src:/srv/app/src
