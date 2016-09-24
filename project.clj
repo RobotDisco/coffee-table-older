@@ -1,0 +1,15 @@
+(defproject coffee-table "0.0.1"
+  :description "Rate the Coffee joints I visit"
+  :dependencies [;; Language Cores
+                 [org.clojure/clojure "1.8.0"]
+
+                 ;; Data Schema/Validation
+                 [prismatic/schema "1.1.3"]
+
+                 ;; Restartable Components
+                 [com.stuartsierra/component "0.3.1"]
+
+                 ;; Datomic
+                 [com.datomic/datomic-free "0.9.5394"]
+                 [io.rkn/conformity "0.4.0"]]
+  :source-paths ["src/cljc" "src/clj"])
