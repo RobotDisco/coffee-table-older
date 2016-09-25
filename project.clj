@@ -12,4 +12,6 @@
                  ;; Datomic
                  [com.datomic/datomic-free "0.9.5394"]
                  [io.rkn/conformity "0.4.0"]]
-  :source-paths ["src/cljc" "src/clj"])
+  :source-paths ["src/cljc" "src/clj"]
+  :profiles {:dev {:dependencies [[org.clojure/tools.namespace "0.2.11"]]
+                   :source-paths ["dev"]}})
