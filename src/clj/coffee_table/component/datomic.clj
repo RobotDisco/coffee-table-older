@@ -1,8 +1,7 @@
 (ns coffee-table.component.datomic
   (:require [datomic.api :as d]
             [com.stuartsierra.component :as component]
-            [io.rkn.conformity :as c]
-            [clojure.java.io :as io]))
+            [io.rkn.conformity :as c]))
 
 (defn bootstrap!
   "Bootstrap schema into database."
@@ -20,7 +19,10 @@
 (defrecord DatomicDatabase [uri]
   component/Lifecycle
   (start [component]
-    (bootstrap! uri)))
+    (bootstrap! uri)
+    component)
+  (stop [component]
+    component))
 
 (defn new-datomic-db [uri]
   (map->DatomicDatabase {:uri uri}))
