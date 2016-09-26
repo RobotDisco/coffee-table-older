@@ -12,7 +12,11 @@
    [clojure.tools.namespace.repl :refer [refresh refresh-all]]
    [com.stuartsierra.component :as component]
    [coffee-table.system :refer [dev-system]]
+   [schema.core :as schema]
    #_ "insert main namespace here"))
+
+;; Enforce schema validation when developing
+(schema/set-fn-validation! true)
 
 (def system
   "A Var containing an object representing the application under development"
@@ -21,7 +25,7 @@
 (defn init
   "Creates an initializes the system under development in the Var #'system."
   []
-  (alter-var-root #'system (fn [_]
+  (alter-var-root #'system (fn [& _]
                              (dev-system {:db-uri "datomic:mem://coffee-table"}))))
 
 (defn start
