@@ -36,3 +36,6 @@
     (doseq [datom (datomic.Util/readAll data)]
       @(d/transact conn datom))
     (d/db conn)))
+
+(defn get-db [datomic]
+  (d/db (:conn datomic)))

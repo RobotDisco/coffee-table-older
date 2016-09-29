@@ -1,4 +1,4 @@
-(ns coffee-table.schema
+(ns coffee-table.model
   (:require [schema.core :as s]))
 
 (def Rating
@@ -7,15 +7,17 @@
 
 (def Address
   "Location information"
-  {:address/address1 s/Str
-   :address/address2 s/Str
+  {:db/id s/Int
+   :address/address1 s/Str
+   (s/optional-key :address/address2) s/Str
    :address/city s/Str
    :address/region s/Str
    :address/country s/Str})
 
 (def Visit
   "Schema for coffee table visits"
-  {:visit/name s/Str
+  {:db/id s/Int
+   :visit/name s/Str
    :visit/date s/Inst
    (s/optional-key :visit/address) Address
    (s/optional-key :visit/espresso-machine) s/Str
@@ -32,6 +34,7 @@
 
 (def Summary
   "Schema for coffee table summaries"
-  {:visit/name s/Str
+  {:db/id s/Int
+   :visit/name s/Str
    :visit/date s/Inst
    :visit/beverage-rating s/Int})
