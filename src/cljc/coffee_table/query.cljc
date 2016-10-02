@@ -14,3 +14,15 @@
   "Grab visit object by entity ID"
   [db id :- s/Int]
   (d/pull db '[*] id))
+
+(s/defn add-visit
+  "Add a café into the system"
+  [conn visit :- m/Visit]
+  (let [res (d/transact conn visit)]
+    (:db-after @res)))
+
+(s/defn delete-entity
+  "Delete an entity from the system"
+  [conn eid]
+  (let [res (d/transact conn [:db.fn/retractEntity eid])]
+    (:db-after @res)))
