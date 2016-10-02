@@ -39,3 +39,8 @@
 
 (defn get-db [datomic]
   (d/db (:conn datomic)))
+
+(defn transact! [datomic txdata]
+  (let [conn (:conn datomic)
+        res (d/transact conn txdata)]
+    (:db-after @res)))
