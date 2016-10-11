@@ -1,7 +1,6 @@
 (ns coffee-table.parser
   (:require [om.next.server :as om]
-            [datomic.api :as d]
-            [coffee-table.query :as ctq]))
+            [datomic.api :as d]))
 
 ;;; Reader queries
 (defmulti readf om/dispatch)
@@ -29,8 +28,7 @@
 
 (defmethod mutatef 'visit-add
   [{:keys [conn]} _ {:keys [visit]}]
-  {:action (fn []
-             @(d/transact conn {visit}))})
+  {:action (fn [] @(d/transact conn visit))})
 
 (defmethod mutatef 'visit-delete
   [{:keys [conn]} _ {:keys [id]}]

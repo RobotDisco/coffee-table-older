@@ -14,7 +14,12 @@
                  [io.rkn/conformity "0.4.0"]
 
                  ;; Om.Next
-                 [org.omcljs/om "1.0.0-alpha46"]]
+                 [org.omcljs/om "1.0.0-alpha46"]
+
+                 ;; Web Server
+                 [aleph "0.4.1"]
+                 [yada "1.1.39"]]
+
   :source-paths ["src/cljc" "src/clj"]
   :profiles {:dev {:dependencies [[org.clojure/tools.namespace "0.2.11"]]
                    :source-paths ["dev"]}})
