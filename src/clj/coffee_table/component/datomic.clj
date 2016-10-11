@@ -22,7 +22,8 @@
   (start [component]
     (assoc component :conn (bootstrap! uri)))
   (stop [component]
-    (d/release (get component :conn))
+    (when-let [conn (:conn component)]
+      (d/release conn))
     (dissoc component :conn)))
 
 (defn new-datomic-db [uri]
